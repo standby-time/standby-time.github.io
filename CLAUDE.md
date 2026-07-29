@@ -49,7 +49,7 @@ GitHub (github.com/standby-time)
 - 项目仓库命名无限制（如 `my-tool`、`demo-app` 等）
 - 访问地址：`https://standby-time.github.io/<repo-name>`
 
-### 项目卡片设计
+### 项目卡片设计（第二次扩展 — 2026-07-30）
 
 项目展示区每个项目渲染为卡片，卡片包含：
 - 项目名称
@@ -60,10 +60,16 @@ GitHub (github.com/standby-time)
   - 纯前端可部署项目：直接填入 demo 链接
   - 不可前端部署的项目（如命令行工具）：demo 链接可省略或替换为文档/截图链接
 
+**卡片交互行为**：
+- **点击卡片主体** → 跳转到该项目在本站内的专属详情页（`#projects/<project-id>`），展示项目的详细说明、截图、架构设计等
+- **点击右上角「源码」链接** → 新标签页打开 GitHub 仓库（外部跳转，行为不变）
+- **点击右上角「演示」链接** → 新标签页打开在线演示（外部跳转，行为不变）
+
 卡片设计要点：
 - 源码链接和演示链接用不同图标/颜色区分（如 GitHub 图标 vs 外部链接图标）
+- 卡片整体有 hover 效果和 cursor:pointer，提示可点击进入详情
+- 右上角链接按钮在事件冒泡中 `stopPropagation`，防止点击链接时同时触发卡片跳转
 - 无演示链接的项目卡片优雅降级，不显示失效链接
-- 链接全部 `target="_blank"` 新标签页打开
 
 ### 项目数据结构（更新）
 
@@ -72,15 +78,23 @@ const projects = [
   {
     id: 'proj-1',
     name: '',
-    description: '',
+    description: '',   // 卡片上的简短描述
+    contentMd: '',     // 详情页正文（Markdown，类比博客文章的 contentMd）
     techStack: [],
-    githubUrl: '',    // 独立项目仓库完整 URL（必填）
-    demoUrl: '',      // 在线演示 URL（可选，纯后端/CLI 项目可为空）
+    githubUrl: '',     // 独立项目仓库完整 URL（必填）
+    demoUrl: '',       // 在线演示 URL（可选）
     category: '',
-    deployed: false,  // 是否已部署，用于控制演示链接是否显示
+    deployed: false,   // 是否已部署，控制演示链接显隐
+    featured: false,   // 是否精选项目（卡片上显示星标）
   }
 ];
 ```
+
+项目详情页设计与博客详情页对齐：
+- 复用博客详情页的布局结构（返回按钮、标题、元信息、正文）
+- 正文使用 Markdown 编写，通过 `marked.js` 渲染
+- 详情页顶部额外展示：技术栈标签、GitHub 链接、演示链接
+- 支持截图/架构图等图片展示
 
 ### GitHub Actions 工作流（主仓库）
 
@@ -208,14 +222,17 @@ jobs:
 
 1. **个人介绍**：头像、简介、技能标签/进度条
 2. **学习心得（博客）**：文章列表，按时间排列，支持分类/标签
-3. **项目展示**：项目卡片（名称、描述、技术栈、GitHub 链接），与 GitHub 仓库关联
+3. **项目展示**：项目卡片（名称、描述、技术栈、GitHub/演示链接），点击卡片进入项目详情页；与 GitHub 独立仓库关联
 4. **联系方式**：邮箱、GitHub、社交媒体链接等
 
 ### 路由设计
 
-- 纯前端路由：使用 `hash`（`#about`、`#blog`、`#projects`、`#contact`）或 `history.pushState`
+- 纯前端路由：使用 `hash`（`#about`、`#blog`、`#projects`、`#contact`）
 - 欢迎页为默认路由（`#welcome` 或 `/`），进入主页后不再显示欢迎页
 - 导航栏点击切换 hash，JS 监听 hash 变化渲染对应板块
+- **子路由**（类比博客的 `#blog/<post-id>`）：
+  - `#projects/<project-id>` → 项目详情页（独立视图，展示项目完整说明）
+  - 返回：点击返回按钮或通过导航栏切换回项目列表
 
 ---
 

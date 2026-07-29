@@ -452,11 +452,13 @@ code:not(pre code) {
   padding: var(--space-lg);
   margin-bottom: var(--space-md);
   box-shadow: var(--shadow-card);
-  transition: border-color var(--transition-fast);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .project-card:hover {
   border-color: var(--color-accent);
+  transform: translateY(-1px);
 }
 
 .project-card__header {

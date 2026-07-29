@@ -26,7 +26,7 @@ const ContentRenderer = {
     switch (section) {
       case "about":    this._renderAbout(contentEl); break;
       case "blog":     this._renderBlog(contentEl, subRoute); break;
-      case "projects": this._renderProjects(contentEl); break;
+      case "projects": this._renderProjects(contentEl, subRoute); break;
       case "toolbox":  this._renderToolbox(contentEl); break;
       case "contact":  this._renderContact(contentEl); break;
       default:         this._render404(contentEl); break;
@@ -300,10 +300,29 @@ const ContentRenderer = {
    * ================================================================ */
 
   /**
-   * 渲染项目展示页
+   * 渲染项目展示页（列表或详情）
+   * @param {HTMLElement} container
+   * @param {string} [projectId] - 项目 ID（子路由）
+   */
+  _renderProjects(container, projectId) {
+    if (projectId) {
+      /* 项目详情页 */
+      const project = PROJECTS.find(p => p.id === projectId);
+      if (project) {
+        this._renderProjectDetail(container, project);
+      } else {
+        this._render404(container);
+      }
+    } else {
+      this._renderProjectList(container);
+    }
+  },
+
+  /**
+   * 渲染项目列表
    * @param {HTMLElement} container
    */
-  _renderProjects(container) {
+  _renderProjectList(container) {
     const filter = this.currentProjectFilter;
     const filteredProjects = filter === "all"
       ? PROJECTS
@@ -343,6 +362,9 @@ const ContentRenderer = {
     html += `</div>`;
     container.innerHTML = html;
 
+    /* 绑定项目卡片点击事件 */
+    this._bindProjectCardEvents(container);
+
     /* 同步侧边栏选中态 */
     this._syncSidebarFilter(filter);
   },
@@ -357,7 +379,7 @@ const ContentRenderer = {
     const showDemo = project.deployed && project.demoUrl;
 
     return `
-      <div class="project-card" id="project-${project.id}">
+      <div class="project-card" id="project-${project.id}" data-project-id="${project.id}">
         <div class="project-card__header">
           <h3 class="project-card__name">${this._escape(project.name)}${project.featured ? ' <span style="color: var(--color-code-string); font-size: 0.8rem;">★</span>' : ""}</h3>
           <div class="project-card__links">
@@ -381,6 +403,82 @@ const ContentRenderer = {
         </div>
       </div>
     `;
+  },
+
+  /**
+   * 绑定项目卡片点击事件（事件委托）
+   * 点击卡片主体 → 跳转项目详情页
+   * 点击链接 → 不冒泡，正常执行链接跳转
+   * @param {HTMLElement} container
+   */
+  _bindProjectCardEvents(container) {
+    container.querySelectorAll(".project-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        /* 如果点击的是链接本身，不触发卡片跳转 */
+        if (e.target.closest("a")) return;
+        const projectId = card.dataset.projectId;
+        if (projectId) {
+          Router.go(`#projects/${projectId}`);
+        }
+      });
+    });
+  },
+
+  /**
+   * 渲染项目详情页
+   * @param {HTMLElement} container
+   * @param {Object} project - 项目数据对象
+   */
+  _renderProjectDetail(container, project) {
+    const bodyHtml = typeof marked !== "undefined"
+      ? marked.parse(project.contentMd || "")
+      : `<pre>${this._escape(project.contentMd || "")}</pre>`;
+
+    const showDemo = project.deployed && project.demoUrl;
+
+    container.innerHTML = `
+      <div class="project-detail">
+        <div class="project-detail__back" id="projectBackBtn">← 返回项目列表</div>
+
+        <div class="project-detail__header">
+          <h1 class="project-detail__title">${this._escape(project.name)}${project.featured ? ' <span style="color: var(--color-code-string);">★</span>' : ""}</h1>
+
+          <div class="project-detail__actions">
+            ${project.githubUrl ? `
+              <a class="btn btn--outline" href="${this._escape(project.githubUrl)}" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                GitHub 源码
+              </a>
+            ` : ""}
+            ${showDemo ? `
+              <a class="btn btn--primary" href="${this._escape(project.demoUrl)}" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h5V3H5c-1.11 0-2 .89-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-5h-2v5z"/></svg>
+                在线演示
+              </a>
+            ` : ""}
+          </div>
+        </div>
+
+        <div class="project-detail__meta">
+          <div class="project-detail__tech">
+            ${project.techStack.map(t => `<span class="tag tag--skill">${this._escape(t)}</span>`).join("")}
+          </div>
+        </div>
+
+        <div class="project-detail__body">${bodyHtml}</div>
+      </div>
+    `;
+
+    /* 增强代码块 */
+    this._enhanceCodeBlocks(container);
+
+    /* 返回按钮 */
+    const backBtn = container.querySelector("#projectBackBtn");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => {
+        Router.go("#projects");
+      });
+    }
   },
 
   /* ================================================================
