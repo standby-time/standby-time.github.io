@@ -1,0 +1,660 @@
+/* ============================================================
+ * components.css — 可复用组件样式
+ * 卡片、按钮、代码块、标签、技能条、博客列表项、项目卡片等
+ * ============================================================ */
+
+/* ================================================================
+ * 1. 卡片（通用）
+ * ================================================================ */
+.card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.card:hover {
+  border-color: var(--color-border-light);
+}
+
+/* 卡片标题 */
+.card__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-sm);
+}
+
+/* 卡片描述 */
+.card__desc {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+/* 卡片底部信息栏 */
+.card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  flex-wrap: wrap;
+}
+
+/* ================================================================
+ * 2. 按钮
+ * ================================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast),
+              border-color var(--transition-fast);
+  user-select: none;
+}
+
+/* 主按钮（填充强调色） */
+.btn--primary {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn--primary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+/* 轮廓按钮 */
+.btn--outline {
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+}
+
+.btn--outline:hover {
+  background-color: var(--color-accent-light);
+}
+
+/* 文字按钮（无边框无背景） */
+.btn--text {
+  color: var(--color-text-secondary);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.btn--text:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+/* ================================================================
+ * 3. 标签
+ * ================================================================ */
+.tag {
+  display: inline-block;
+  padding: 2px var(--space-sm);
+  font-size: 0.75rem;
+  font-family: var(--font-code);
+  color: var(--color-accent);
+  background-color: var(--color-accent-light);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.tag--skill {
+  margin: 2px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+/* ================================================================
+ * 4. 代码块
+ * ================================================================ */
+
+/* 行内代码 */
+code:not(pre code) {
+  padding: 1px 6px;
+  font-size: 0.9em;
+  font-family: var(--font-code);
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+  color: var(--color-code-keyword);
+}
+
+/* 代码块容器 */
+.code-block {
+  margin: var(--space-md) 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-code-bg);
+}
+
+/* 代码块顶部栏（仿 VS Code 标签页） */
+.code-block__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-bg-tertiary);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.8rem;
+}
+
+/* 代码块语言标签（左上角） */
+.code-block__lang {
+  color: var(--color-text-secondary);
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  text-transform: lowercase;
+}
+
+/* 代码块复制按钮 */
+.code-block__copy-btn {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.code-block__copy-btn:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+/* 代码块内容 */
+.code-block pre {
+  margin: 0;
+  padding: var(--space-md);
+  overflow-x: auto;                    /* 长代码行可水平滚动 */
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-code-text);
+  tab-size: 4;                          /* 制表符宽度 */
+  -moz-tab-size: 4;
+}
+
+.code-block pre code {
+  font-family: var(--font-code);
+  font-size: inherit;
+  padding: 0;
+  background: none;
+  color: inherit;
+  border-radius: 0;
+}
+
+/* 技能专长卡片网格 */
+.skill-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+/* 单张技能卡片 */
+.skill-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  transition: border-color var(--transition-fast);
+}
+
+.skill-card:hover {
+  border-color: var(--color-accent);
+}
+
+.skill-card__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-code);
+}
+
+.skill-card__desc {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ================================================================
+ * 5. 工具箱链接卡片
+ * ================================================================ */
+.toolbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-md);
+}
+
+.toolbox-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-md);
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.toolbox-card:hover {
+  border-color: var(--color-accent);
+  background-color: var(--color-bg-hover);
+}
+
+.toolbox-card__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-xs);
+}
+
+.toolbox-card__desc {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.toolbox-card__url {
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  font-family: var(--font-code);
+  margin-top: var(--space-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================================================================
+ * 7. 博客列表项
+ * ================================================================ */
+.blog-item {
+  padding: var(--space-lg);
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.blog-item:hover {
+  border-color: var(--color-border-light);
+  background-color: var(--color-bg-hover);
+}
+
+.blog-item__title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-xs);
+}
+
+.blog-item__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.blog-item__summary {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* 博客详情页容器 */
+.blog-detail {
+  max-width: 800px;
+}
+
+.blog-detail__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-md);
+}
+
+.blog-detail__meta {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.blog-detail__body {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--color-text-primary);
+}
+
+/* 博客详情中 Markdown 渲染样式 */
+.blog-detail__body h1,
+.blog-detail__body h2,
+.blog-detail__body h3 {
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
+  color: var(--color-text-heading);
+}
+
+.blog-detail__body h1 { font-size: 1.6rem; }
+.blog-detail__body h2 { font-size: 1.3rem; }
+.blog-detail__body h3 { font-size: 1.1rem; }
+
+.blog-detail__body p {
+  margin-bottom: var(--space-md);
+}
+
+.blog-detail__body ul,
+.blog-detail__body ol {
+  margin-bottom: var(--space-md);
+  padding-left: var(--space-xl);
+}
+
+.blog-detail__body ul {
+  list-style: disc;
+}
+
+.blog-detail__body ol {
+  list-style: decimal;
+}
+
+.blog-detail__body li {
+  margin-bottom: var(--space-xs);
+}
+
+.blog-detail__body blockquote {
+  margin: var(--space-md) 0;
+  padding: var(--space-sm) var(--space-md);
+  border-left: 3px solid var(--color-accent);
+  background-color: var(--color-accent-light);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--color-text-secondary);
+}
+
+.blog-detail__body a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.blog-detail__body img {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  margin: var(--space-md) 0;
+}
+
+.blog-detail__body hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-xl) 0;
+}
+
+.blog-detail__body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-md) 0;
+}
+
+.blog-detail__body th,
+.blog-detail__body td {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.blog-detail__body th {
+  background-color: var(--color-bg-tertiary);
+  font-weight: 600;
+}
+
+/* 返回按钮 */
+.blog-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+  color: var(--color-accent);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.blog-detail__back:hover {
+  color: var(--color-accent-hover);
+}
+
+/* ================================================================
+ * 8. 项目卡片
+ * ================================================================ */
+.project-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--transition-fast);
+}
+
+.project-card:hover {
+  border-color: var(--color-accent);
+}
+
+.project-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+  gap: var(--space-md);
+}
+
+.project-card__name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+}
+
+.project-card__links {
+  display: flex;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+/* 项目卡片 — GitHub / Demo 链接图标 */
+.project-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.project-card__link:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+/* 源码链接 — GitHub 暗色 */
+.project-card__link--github:hover {
+  color: #ffffff;
+  background-color: #333;
+}
+
+/* 演示链接 — 强调色 */
+.project-card__link--demo {
+  color: var(--color-accent);
+}
+
+.project-card__link--demo:hover {
+  color: #ffffff;
+  background-color: var(--color-accent);
+}
+
+.project-card__link svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.project-card__desc {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+.project-card__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+/* ================================================================
+ * 9. 个人介绍头像区域
+ * ================================================================ */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 头像占位（后期替换为图片） */
+.profile-header__avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: var(--color-bg-tertiary);
+  border: 3px solid var(--color-border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+}
+
+.profile-header__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-header__info {
+  flex: 1;
+}
+
+.profile-header__name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-xs);
+}
+
+.profile-header__title {
+  font-size: 1rem;
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+}
+
+.profile-header__bio {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* ================================================================
+ * 10. 联系方式列表
+ * ================================================================ */
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast);
+}
+
+.contact-item:hover {
+  border-color: var(--color-accent);
+}
+
+.contact-item__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--color-accent);
+  background-color: var(--color-accent-light);
+  border-radius: var(--radius-md);
+}
+
+.contact-item__label {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.contact-item__value {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+}
+
+/* ================================================================
+ * 11. 搜索框（全局）
+ * ================================================================ */
+.search-input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  transition: border-color var(--transition-fast);
+}
+
+.search-input:focus {
+  border-color: var(--color-accent);
+}
+
+.search-input::placeholder {
+  color: var(--color-text-secondary);
+}

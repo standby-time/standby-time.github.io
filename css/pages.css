@@ -1,0 +1,231 @@
+/* ============================================================
+ * pages.css — 各页面/板块特有样式
+ * 包含欢迎页特效、个人介绍、博客、项目展示、联系方式等特定样式
+ * ============================================================ */
+
+/* ================================================================
+ * 1. 欢迎页 — 打字机动画
+ * ================================================================ */
+
+/* 打字机效果容器 */
+.typing-container {
+  display: inline-block;
+}
+
+/* 打字机文字（JS 逐字打字，CSS 仅负责光标闪烁） */
+.typing-text {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  font-family: var(--font-code);
+  border-right: 3px solid var(--color-accent);
+  padding-right: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: blink-caret 0.75s step-end infinite;
+}
+
+/* 光标闪烁（打字完成后 JS 移除 border-right 即停止） */
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: var(--color-accent); }
+}
+
+/* 欢迎页 "进入网站" 按钮区域 — 初始透明，打字完成后由 JS 添加 --visible 类 */
+.welcome__enter-area {
+  margin-top: var(--space-lg);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.welcome__enter-area--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ================================================================
+ * 2. 个人介绍页
+ * ================================================================ */
+
+/* 技能分组 */
+.skills-group {
+  margin-bottom: var(--space-lg);
+}
+
+.skills-group__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-md);
+}
+
+/* 时间线（教育经历等） */
+.timeline {
+  position: relative;
+  padding-left: var(--space-xl);
+}
+
+/* 时间线竖线 */
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background-color: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: var(--space-lg);
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 时间线圆点 */
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: calc(-1 * var(--space-xl) + 4px);
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  border: 2px solid var(--color-bg-primary);
+}
+
+.timeline-item__period {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  font-family: var(--font-code);
+  margin-bottom: var(--space-xs);
+}
+
+.timeline-item__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-xs);
+}
+
+.timeline-item__desc {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* ================================================================
+ * 3. 博客页面
+ * ================================================================ */
+
+/* 博客分类筛选按钮 */
+.blog-filters {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.blog-filters .tag {
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.blog-filters .tag--active {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+/* 博客列表 */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================================================================
+ * 4. 项目展示页
+ * ================================================================ */
+
+/* 项目分类标题 */
+.project-category {
+  margin-bottom: var(--space-xl);
+}
+
+.project-category__title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 项目卡片网格（后期可用，目前用列表） */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: var(--space-md);
+}
+
+/* ================================================================
+ * 5. 联系方式页
+ * ================================================================ */
+
+/* 联系方式布局 */
+.contact-section {
+  max-width: 600px;
+}
+
+.contact-section__text {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-lg);
+}
+
+/* ================================================================
+ * 6. 404 / 空状态
+ * ================================================================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.empty-state__icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+  opacity: 0.5;
+}
+
+.empty-state__text {
+  font-size: 1rem;
+}
+
+/* ================================================================
+ * 7. 响应式基础（后期完善移动端）
+ * ================================================================ */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;                          /* 移动端默认隐藏目录栏 */
+    position: fixed;                   /* 浮层覆盖 */
+    z-index: 200;
+  }
+
+  .sidebar--mobile-open {
+    width: var(--sidebar-width);
+  }
+
+  .content {
+    padding: var(--space-md);
+  }
+}

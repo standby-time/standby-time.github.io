@@ -1,0 +1,404 @@
+/* ============================================================
+ * layout.css — 全局布局样式
+ * 定义网站的主体骨架：顶部细栏、导航栏、侧边栏、内容区、欢迎页
+ * 核心原则：body 固定高度，内部各区域独立滚动
+ * ============================================================ */
+
+/* ================================================================
+ * 1. 欢迎页（全屏）
+ * ================================================================ */
+.welcome-page {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-primary);
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+/* 欢迎页隐藏态 */
+.welcome-page--hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ================================================================
+ * 2. 主页面容器（欢迎页隐藏后显示）
+ * ================================================================ */
+.main-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;                    /* 继承 body 的无滚动策略 */
+}
+
+/* ================================================================
+ * 3. 顶部细栏 — 高度 5vh
+ * ================================================================ */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--topbar-height);
+  min-height: 32px;                    /* 5vh 太小时保证可用性 */
+  padding: 0 var(--space-lg);
+  background-color: var(--color-bg-tertiary);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-topbar);
+  z-index: 100;                        /* 保持在导航栏之上 */
+  gap: var(--space-md);
+}
+
+/* 左侧：名字/Logo */
+.top-bar__brand {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text-heading);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.top-bar__brand:hover {
+  color: var(--color-accent);
+}
+
+/* 中间：搜索框 */
+.top-bar__search {
+  flex: 1;
+  max-width: 400px;
+  height: 60%;
+  padding: 0 var(--space-md);
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  font-size: 0.85rem;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.top-bar__search::placeholder {
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+}
+
+.top-bar__search:focus {
+  border-color: var(--color-accent);
+  background-color: var(--color-bg-secondary);
+}
+
+/* 右侧：按钮组 */
+.top-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+/* GitHub 快捷访问按钮 */
+.top-bar__github-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.top-bar__github-link:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+.top-bar__github-link svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* 主题切换按钮 */
+.top-bar__theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.top-bar__theme-toggle:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+/* ================================================================
+ * 4. 导航栏
+ * ================================================================ */
+.nav {
+  display: flex;
+  align-items: center;
+  height: var(--navbar-height);
+  padding: 0 var(--space-lg);
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  gap: var(--space-xs);
+  z-index: 99;
+  flex-shrink: 0;
+}
+
+/* 导航项 */
+.nav__item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 var(--space-md);
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color var(--transition-fast), border-color var(--transition-fast),
+              background-color var(--transition-fast);
+  user-select: none;
+}
+
+.nav__item:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+/* 导航项 — 当前选中态 */
+.nav__item--active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+/* 导航项图标 */
+.nav__item-icon {
+  margin-right: var(--space-sm);
+  font-size: 1rem;
+}
+
+/* ================================================================
+ * 5. 主体区域（侧边栏 + 内容区）
+ * ================================================================ */
+.main-area {
+  display: flex;
+  flex: 1;                             /* 占据剩余的垂直空间 */
+  overflow: hidden;                    /* 子元素各自滚动 */
+}
+
+/* ================================================================
+ * 6. 左侧目录栏
+ * ================================================================ */
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;                      /* 宽度固定，不被内容区挤压 */
+  height: 100%;
+  overflow-y: auto;                    /* 独立垂直滚动 */
+  background-color: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  padding: var(--space-md) 0;
+  transition: width var(--transition-normal);
+}
+
+/* 目录栏折叠态 */
+.sidebar--collapsed {
+  width: var(--sidebar-collapsed-width);
+  padding: var(--space-md) 0;
+  overflow: hidden;
+}
+
+/* 左侧书签按钮 — 固定在侧边栏右边缘，控制展开/隐藏左侧目录 */
+.sidebar-bookmark {
+  position: fixed;
+  left: var(--sidebar-width);          /* 侧边栏打开时，书签在右边缘 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 56px;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  cursor: pointer;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  font-size: 0.7rem;
+  transition: left var(--transition-normal), background-color var(--transition-fast);
+}
+
+.sidebar-bookmark:hover {
+  background-color: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+/* 侧边栏折叠时书签移到最左边 */
+.sidebar-bookmark--collapsed {
+  left: 0;
+}
+
+/* 目录分类标题（顶级） */
+.sidebar__category {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  transition: color var(--transition-fast);
+}
+
+.sidebar__category:hover {
+  color: var(--color-text-primary);
+}
+
+/* 分类展开/折叠箭头 */
+.sidebar__category-arrow {
+  font-size: 0.65rem;
+  transition: transform var(--transition-fast);
+}
+
+.sidebar__category-arrow--open {
+  transform: rotate(90deg);
+}
+
+/* 目录项列表 */
+.sidebar__list {
+  overflow: hidden;
+  max-height: 0;                       /* 收起态 */
+  transition: max-height var(--transition-normal);
+}
+
+.sidebar__list--open {
+  max-height: 600px;                   /* 展开态（足够大，覆盖大部分内容） */
+}
+
+/* 单个目录项 */
+.sidebar__item {
+  display: block;                      /* 占满宽度可点 */
+  padding: var(--space-sm) var(--space-md) var(--space-sm) calc(var(--space-md) + var(--space-lg));
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+  user-select: none;
+  border-left: 2px solid transparent;
+}
+
+.sidebar__item:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+/* 目录项 — 当前选中（对应内容区滚动位置） */
+.sidebar__item--active {
+  color: var(--color-accent);
+  background-color: var(--color-accent-light);
+  border-left-color: var(--color-accent);
+}
+
+/* 第二级目录项（更深缩进） */
+.sidebar__item--sub {
+  padding-left: calc(var(--space-md) + var(--space-xl));
+  font-size: 0.8rem;
+}
+
+/* ================================================================
+ * 7. 中间内容展示区
+ * ================================================================ */
+.content {
+  flex: 1;                             /* 占据剩余水平空间 */
+  height: 100%;
+  overflow-y: auto;                    /* 独立垂直滚动 */
+  padding: var(--space-xl);
+  background-color: var(--color-bg-primary);
+  scroll-behavior: smooth;             /* 锚点跳转平滑滚动 */
+}
+
+/* 内容区块（对应左侧目录项，用于锚点定位） */
+.content__section {
+  margin-bottom: var(--space-2xl);
+}
+
+.content__section:last-child {
+  margin-bottom: 0;
+}
+
+/* 内容区板块标题 */
+.content__section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-heading);
+}
+
+/* 内容区子标题 */
+.content__subsection-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: var(--space-lg) 0 var(--space-md);
+  color: var(--color-text-heading);
+}
+
+/* ================================================================
+ * 8. 隐藏类
+ * ================================================================ */
+.hidden {
+  display: none !important;
+}
+
+/* ================================================================
+ * 9. 欢迎页欢迎语区域
+ * ================================================================ */
+.welcome__content {
+  text-align: center;
+}
+
+.welcome__title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-lg);
+}
+
+.welcome__subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xl);
+}
+
+.welcome__enter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-xl);
+  font-size: 1rem;
+  color: #ffffff;
+  background-color: var(--color-accent);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.welcome__enter-btn:hover {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-1px);
+}

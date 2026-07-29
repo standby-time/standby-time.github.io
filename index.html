@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Standby-Time 个人网站 — 计算机专业学生的学习与项目展示">
+  <title>Standby-Time</title>
+
+  <!-- ========== 样式文件 ========== -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- ============================================================
+       欢迎页（全屏覆盖，点击"进入网站"后隐藏）
+       ============================================================ -->
+  <div class="welcome-page" id="welcomePage">
+    <div class="welcome__content">
+      <!-- 打字机动画文字容器 -->
+      <div class="typing-container">
+        <h1 class="typing-text" id="typingText"></h1>
+      </div>
+      <!-- 进入按钮区（打字动画完成后淡入） -->
+      <div class="welcome__enter-area" id="welcomeEnterArea">
+        <button class="welcome__enter-btn" id="enterSiteBtn">
+          进入网站 <span style="font-size: 1.1rem;">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       主页面（初始隐藏）
+       ============================================================ -->
+  <div class="main-page hidden" id="mainPage">
+
+    <!-- ========== 顶部细栏（~5vh） ========== -->
+    <header class="top-bar" id="topBar">
+      <!-- 左侧：品牌名（点击回到欢迎页） -->
+      <span class="top-bar__brand" id="brandName" title="回到欢迎页">Standby-Time</span>
+
+      <!-- 中间：搜索框 -->
+      <input
+        class="top-bar__search"
+        type="text"
+        id="searchInput"
+        placeholder="搜索文章、项目..."
+      >
+
+      <!-- 右侧：操作按钮组 -->
+      <div class="top-bar__actions">
+        <!-- GitHub 快捷访问 -->
+        <a
+          class="top-bar__github-link"
+          href="https://github.com/Standby-Time"
+          target="_blank"
+          rel="noopener"
+          title="GitHub 主页"
+        >
+          <!-- GitHub 图标 -->
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <path fill="currentColor" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+
+        <!-- 主题切换按钮 -->
+        <button
+          class="top-bar__theme-toggle"
+          id="themeToggle"
+          title="切换浅色模式"
+        >🌙</button>
+      </div>
+    </header>
+
+    <!-- ========== 导航栏 ========== -->
+    <nav class="nav" id="navBar">
+      <div class="nav__item nav__item--active" data-section="about">
+        <span class="nav__item-icon">👤</span> 个人介绍
+      </div>
+      <div class="nav__item" data-section="blog">
+        <span class="nav__item-icon">📝</span> 学习心得
+      </div>
+      <div class="nav__item" data-section="projects">
+        <span class="nav__item-icon">💻</span> 项目展示
+      </div>
+      <div class="nav__item" data-section="toolbox">
+        <span class="nav__item-icon">🧰</span> 工具箱
+      </div>
+      <div class="nav__item" data-section="contact">
+        <span class="nav__item-icon">📬</span> 联系方式
+      </div>
+    </nav>
+
+    <!-- ========== 主体区域（侧边栏 + 内容区） ========== -->
+    <div class="main-area">
+      <!-- 左侧书签按钮 — 点击展开/隐藏侧边栏 -->
+      <div class="sidebar-bookmark" id="sidebarBookmark" title="折叠目录栏">◀</div>
+
+      <!-- 左侧目录栏 -->
+      <aside class="sidebar" id="sidebar">
+        <!-- 目录由 Sidebar.render() 动态生成 -->
+      </aside>
+
+      <!-- 中间内容展示区 -->
+      <main class="content" id="mainContent">
+        <!-- 内容由 ContentRenderer.render() 动态生成 -->
+      </main>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       JavaScript 文件（按依赖顺序加载）
+       ============================================================ -->
+  <!-- 1. Markdown 渲染库（CDN） -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- 2. 数据层 -->
+  <script src="js/data.js"></script>
+
+  <!-- 3. 工具模块 -->
+  <script src="js/theme.js"></script>
+
+  <!-- 4. 渲染模块 -->
+  <script src="js/render-content.js"></script>
+
+  <!-- 5. 侧边栏模块 -->
+  <script src="js/sidebar.js"></script>
+
+  <!-- 6. 路由模块 -->
+  <script src="js/router.js"></script>
+
+  <!-- 7. 应用入口（最后加载，负责初始化和事件绑定） -->
+  <script src="js/app.js"></script>
+
+  <!-- ============================================================
+       欢迎页打字机特效脚本（页面级逻辑，直接内联）
+       ============================================================ -->
+  <script>
+  (function() {
+    /* 要打出的欢迎文字 */
+    const welcomeText = "欢迎来到Standby-Time的网站！";
+    const typingEl = document.getElementById("typingText");
+    const enterArea = document.getElementById("welcomeEnterArea");
+
+    if (!typingEl) return;
+
+    /* 打字速度：中文 ~120ms/字，英文 ~60ms/字，混合取 ~100ms */
+    let charIndex = 0;
+    typingEl.textContent = "";
+
+    function typeNextChar() {
+      if (charIndex < welcomeText.length) {
+        typingEl.textContent += welcomeText[charIndex];
+        charIndex++;
+        /* 对中文字符稍慢，英文/标点稍快 */
+        const ch = welcomeText[charIndex - 1];
+        const delay = /[一-鿿]/.test(ch) ? 120 : 70;
+        setTimeout(typeNextChar, delay);
+      } else {
+        /* 打完后移除光标并淡入按钮 */
+        typingEl.style.borderRight = "none";
+        if (enterArea) {
+          enterArea.classList.add("welcome__enter-area--visible");
+        }
+      }
+    }
+
+    /* 启动打 */
+    typeNextChar();
+  })();
+  </script>
+</body>
+</html>
