@@ -19,6 +19,11 @@ const ContentRenderer = {
     const contentEl = document.getElementById("mainContent");
     if (!contentEl) return;
 
+    /* 离开 C 刷题页时清理（恢复 sidebar、断开 observer） */
+    if (typeof CPracticeRenderer !== "undefined") {
+      CPracticeRenderer.destroy();
+    }
+
     /* 重置筛选状态 */
     this.currentBlogFilter = "all";
     this.currentProjectFilter = "all";
@@ -309,7 +314,12 @@ const ContentRenderer = {
       /* 项目详情页 */
       const project = PROJECTS.find(p => p.id === projectId);
       if (project) {
-        this._renderProjectDetail(container, project);
+        /* 自定义渲染器（如 C 语言刷题页） */
+        if (project.customRenderer === "c-practice-100-CaiNiao") {
+          CPracticeRenderer.render(container, project);
+        } else {
+          this._renderProjectDetail(container, project);
+        }
       } else {
         this._render404(container);
       }

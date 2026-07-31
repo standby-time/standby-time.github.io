@@ -411,6 +411,19 @@ cd ~/dotfiles
 - 各平台配置文件分目录存放，\`install.sh\` 自动检测系统类型
 `,
   },
+  {
+    id: "c-practice-100-CaiNiao",
+    name: "C语言刷题记录",
+    category: "algo",
+    description: "菜鸟教程 C 语言编程题解合集，涵盖基础语法到算法应用，持续更新中。",
+    techStack: ["C", "算法"],
+    githubUrl: "https://github.com/standby-time/c-practice-100-CaiNiao",
+    demoUrl: "",
+    deployed: false,
+    featured: true,
+    contentMd: "",
+    customRenderer: "c-practice-100-CaiNiao",
+  },
 ];
 
 /* ---------- 项目分类定义（对应侧边栏目录结构） ---------- */

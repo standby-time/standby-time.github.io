@@ -351,7 +351,270 @@
 }
 
 /* ================================================================
- * 7. 响应式基础（后期完善移动端）
+ * 7. C 语言刷题展示页
+ * ================================================================ */
+
+/* 刷题展示页整体容器（填满 #mainContent） */
+.c-practice {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 返回按钮 */
+.c-practice__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+  color: var(--color-accent);
+  cursor: pointer;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.c-practice__back:hover {
+  color: var(--color-accent-hover);
+}
+
+/* 顶部标题行 */
+.c-practice__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  flex-shrink: 0;
+}
+
+.c-practice__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-heading);
+}
+
+/* 双栏布局 */
+.c-practice__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;  /* flex 子元素允许收缩到内容以下，配合 overflow */
+  gap: var(--space-lg);
+}
+
+/* ---- 左侧题目目录 ---- */
+.c-practice__sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-border);
+  padding-right: var(--space-md);
+}
+
+.c-practice__sidebar-header {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  flex-shrink: 0;
+}
+
+.c-practice__count {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+.c-practice__nav {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* 单个目录项 */
+.c-practice__nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.c-practice__nav-item:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.c-practice__nav-item--active {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.c-practice__nav-num {
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  min-width: 28px;
+  flex-shrink: 0;
+}
+
+.c-practice__nav-item--active .c-practice__nav-num {
+  color: var(--color-accent);
+}
+
+.c-practice__nav-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- 右侧题目内容区 ---- */
+.c-practice__content {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  scroll-behavior: smooth;
+}
+
+/* 每道题目的 section */
+.c-practice__problem {
+  padding-bottom: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.c-practice__problem:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.c-practice__problem-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-sm);
+}
+
+.c-practice__problem-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+/* ---- 解法标签（方法一、方法二……） ---- */
+.c-practice__solution {
+  margin-bottom: var(--space-md);
+}
+
+.c-practice__solution:last-child {
+  margin-bottom: 0;
+}
+
+.c-practice__solution-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px dashed var(--color-border);
+}
+
+/* ---- 解题思路（可折叠面板） ---- */
+.c-practice__approach {
+  margin-bottom: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.c-practice__approach-summary {
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-bg-tertiary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  user-select: none;
+  list-style: none;  /* 隐藏默认三角形（用自定义图标） */
+}
+
+.c-practice__approach-summary::-webkit-details-marker {
+  display: none;  /* Chrome 隐藏默认三角形 */
+}
+
+.c-practice__approach-summary::before {
+  content: '▶';
+  display: inline-block;
+  margin-right: var(--space-sm);
+  font-size: 0.7rem;
+  transition: transform var(--transition-fast);
+}
+
+details[open] .c-practice__approach-summary::before {
+  transform: rotate(90deg);
+}
+
+.c-practice__approach-summary:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.c-practice__approach-body {
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* 代码块内的 pre（覆盖全局样式） */
+.c-practice__code {
+  margin: 0;
+  padding: var(--space-md);
+  background-color: var(--color-code-bg, #1e1e1e);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  overflow-x: auto;
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--color-code-text, #d4d4d4);
+  white-space: pre;
+}
+
+.c-practice__code code {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ---- C 语法高亮颜色 ---- */
+.c-hl-keyword  { color: #569cd6; }  /* 关键字（蓝） */
+.c-hl-comment  { color: #6a9955; }  /* 注释（绿） */
+.c-hl-string   { color: #ce9178; }  /* 字符串（橙） */
+.c-hl-number   { color: #b5cea8; }  /* 数字（浅绿） */
+
+/* 浅色主题下的高亮颜色调整 */
+[data-theme="light"] .c-hl-keyword  { color: #0000ff; }
+[data-theme="light"] .c-hl-comment  { color: #008000; }
+[data-theme="light"] .c-hl-string   { color: #a31515; }
+[data-theme="light"] .c-hl-number   { color: #098658; }
+
+[data-theme="light"] .c-practice__code {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* ================================================================
+ * 8. 响应式基础（后期完善移动端）
  * ================================================================ */
 @media (max-width: 768px) {
   .sidebar {

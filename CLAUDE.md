@@ -121,6 +121,208 @@ jobs:
 
 ---
 
+## C语言刷题代码展示（第三次扩展 — 2026-07-31）
+
+### 概述
+
+将菜鸟教程 C 语言刷题代码（.c 文件）作为独立项目展示在网站上。页面布局为左侧题目目录 + 右侧连续展示每题的题目描述和代码，点击目录项平滑滚动到对应题目位置。
+
+### 仓库组织
+
+- **独立仓库 `c-practice-100-CaiNiao`**：存放所有 .c 文件
+  - GitHub 地址：`https://github.com/standby-time/c-practice-100-CaiNiao`
+  - .exe 文件通过 `.gitignore` 排除，不提交
+  - 文件命名建议：`01-hello-world.c`、`02-add-two-numbers.c` 等，编号决定排序
+
+- **主仓库展示**：项目卡片中新增"C语言刷题记录"，点击进入刷题展示页（`#projects/c-practice-100-CaiNiao`）
+
+### .c 文件头部约定
+
+每个 .c 文件必须包含以下格式的头部注释，供同步脚本解析：
+
+```c
+/*
+题目：Hello World
+
+思路：编写一个程序，输出 "Hello, World!"
+*/
+
+#include <stdio.h>
+
+int main() {
+    printf("Hello, World!\n");
+    return 0;
+}
+```
+
+- `题目：`：题目标题（必填，取第一句/第一行作为短标题显示在目录中）
+- `思路：`：解题思路/题目描述（可选，显示在代码块上方）
+- 头部注释后的所有内容视为代码块
+
+### 数据同步方案
+
+使用 Node.js 脚本在部署时自动同步。原理：读取独立仓库中的 .c 文件 → 解析头部注释 → 生成 JS 数据文件。
+
+**同步脚本** `scripts/sync-c-practice.js`：
+
+```js
+// 扫描指定目录下所有 .c 文件，解析头部注释（题目：/ 思路：），生成 js/data-c-practice.js
+// 用法：node scripts/sync-c-practice.js <c-practice-100-CaiNiao 仓库本地路径>
+```
+
+**本地开发时**：手动运行同步脚本（需安装 Node.js），或手动编辑 `js/data-c-practice.js`（不推荐）
+
+**GitHub Actions 部署时**：在构建步骤中 clone 独立仓库并运行同步脚本，再部署
+
+### 更新后的 GitHub Actions 工作流
+
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # 也支持从独立仓库通过 repository_dispatch 触发
+  repository_dispatch:
+    types: [c-practice-100-CaiNiao-updated]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 同步 C 语言刷题数据
+      - name: Sync C practice problems
+        run: |
+          git clone https://github.com/standby-time/c-practice-100-CaiNiao.git /tmp/c-practice-100-CaiNiao
+          node scripts/sync-c-practice.js /tmp/c-practice-100-CaiNiao
+
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - uses: actions/deploy-pages@v4
+        id: deployment
+```
+
+### 页面布局与交互
+
+```
+┌─────────────┬──────────────────────────────────────────────┐
+│ 📚 题目列表  │  #1 Hello World                            │
+│ 共 50 题     │  编写一个程序，输出 "Hello, World!"        │
+│              │  ┌──────────────────────────────────────┐   │
+│ #1 Hello     │  │ #include <stdio.h>                  │   │
+│   World      │  │                                     │   │
+│ #2 两数之和  │  │ int main() {                        │   │
+│ #3 判断素数  │  │     printf("Hello, World!\n");      │   │
+│ #4 斐波那契  │  │     return 0;                       │   │
+│ #5 数组排序  │  │ }                                   │   │
+│ ...          │  └──────────────────────────────────────┘   │
+│              │                                             │
+│              │  #2 两数之和                                │
+│              │  输入两个整数，输出它们的和                 │
+│              │  ┌──────────────────────────────────────┐   │
+│              │  │ #include <stdio.h>                  │   │
+│              │  │ ...                                │   │
+│              │  └──────────────────────────────────────┘   │
+└─────────────┴──────────────────────────────────────────────┘
+```
+
+**左侧目录栏**：
+- 固定宽度 ~220px，独立滚动（`overflow-y: auto`）
+- 顶部显示总题数统计
+- 每项显示题号和标题，当前可视题目高亮（Intersection Observer 监听右侧内容区滚动）
+- 点击目录项 → 右侧内容区 `scrollIntoView({ behavior: 'smooth' })` 到对应题目
+- 目录项不需要 `stopPropagation`，因为这里没有外层点击事件
+
+**右侧内容区**：
+- 独立滚动（`overflow-y: auto`），占满剩余宽度
+- 所有题目按题号顺序连续纵向排列
+- 每道题包含：题号标题（`#1 Hello World`）、题目描述文字、代码块
+- 代码块使用等宽字体、深色背景、语法高亮（基础 C 关键字高亮即可）、支持水平滚动
+- 每道题之间有明显分隔
+
+**交互细节**：
+- 目录高亮跟随右侧滚动实时更新（Intersection Observer API）
+- 滚动到某题时，对应目录项高亮（添加 `.active` 类）
+- 目录和内容区各自独立滚动，互不阻塞
+
+### 路由
+
+- 项目卡片点击 → `#projects/c-practice-100-CaiNiao`，进入刷题展示页
+- 返回按钮 → `#projects`，回到项目列表
+- 左侧目录点击**不改变 URL**，仅触发内容区滚动
+
+### 数据结构
+
+```js
+// js/data-c-practice.js（由同步脚本自动生成，不要手动编辑）
+const cPracticeProblems = [
+  {
+    id: 1,                              // 题号（从文件名提取）
+    title: 'Hello World',               // 题目标题（从 题目： 解析，取第一句）
+    description: '编写一个程序...',      // 题目描述（从 思路： 解析）
+    code: '#include <stdio.h>\n...',    // 代码内容（头部注释之后的所有行）
+    fileName: '01-hello-world.c'        // 源文件名
+  },
+];
+```
+
+### 项目卡片配置
+
+```js
+// 在 data.js 的 projects 数组中新增
+{
+  id: 'c-practice-100-CaiNiao',
+  name: 'C语言刷题记录',
+  description: '菜鸟教程 C 语言编程题解合集，涵盖基础语法到算法应用',
+  contentMd: '',                        // 不使用 Markdown 详情，由 render-c-practice.js 接管
+  techStack: ['C', '算法'],
+  githubUrl: 'https://github.com/standby-time/c-practice-100-CaiNiao',
+  demoUrl: '',                          // 无在线演示
+  category: 'learning',
+  deployed: false,
+  featured: false,
+  customRenderer: 'c-practice-100-CaiNiao'          // 标记使用自定义渲染器，不走默认 Markdown 详情页
+}
+```
+
+### 实现文件
+
+| 文件 | 说明 |
+|------|------|
+| `scripts/sync-c-practice.js` | Node.js 同步脚本，扫描 .c 文件生成数据文件 |
+| `js/data-c-practice.js` | 题目数据（脚本自动生成，不手动编辑） |
+| `js/render-c-practice.js` | 刷题展示页渲染（目录 + 内容区 + 滚动联动） |
+| `css/pages.css` | 新增 `.c-practice` 相关样式 |
+
+### router.js 修改点
+
+在项目详情路由分支中增加判断：如果 `project.customRenderer === 'c-practice-100-CaiNiao'`，调用 `CPracticeRenderer.render(container, project)` 而不是走默认的 Markdown 渲染。
+
+### 独立仓库结构
+
+```
+c-practice-100-CaiNiao/
+├── .gitignore            # 排除 *.exe
+├── README.md             # 仓库说明
+├── 01-hello-world.c
+├── 01-hello-world.exe    # （gitignore，不提交）
+├── 02-add-two-numbers.c
+├── 03-check-prime.c
+├── ...
+└── 50-some-problem.c
+```
+
+`.gitignore` 内容：
+```
+*.exe
+```
+
+---
+
 ## 设计系统
 
 ### 配色方案
@@ -341,23 +543,27 @@ const projects = [
 my-website/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml      # GitHub Actions 自动部署配置
+│       └── deploy.yml      # GitHub Actions 自动部署配置（含同步步骤）
 ├── index.html              # 入口文件（包含欢迎页和主页面框架）
 ├── CLAUDE.md               # 本文件
+├── scripts/
+│   └── sync-c-practice.js  # C 刷题数据同步脚本
 ├── css/
 │   ├── reset.css           # CSS reset / normalize
 │   ├── variables.css       # CSS 变量定义（主题色、字体、间距）
 │   ├── layout.css          # 全局布局（顶部栏、导航、侧边栏、内容区）
 │   ├── components.css      # 可复用组件样式（按钮、卡片、代码块、标签等）
-│   └── pages.css           # 各页面/板块特有样式
+│   └── pages.css           # 各页面/板块特有样式（含 .c-practice 样式）
 ├── js/
 │   ├── app.js              # 主入口：路由、初始化、全局状态
 │   ├── theme.js            # 主题切换逻辑
-│   ├── router.js           # 前端路由（hash 监听、板块切换）
+│   ├── router.js           # 前端路由（hash 监听、板块切换，含 c-practice-100-CaiNiao 分支）
 │   ├── sidebar.js          # 侧边栏目录生成与折叠逻辑
 │   ├── render-blog.js      # 博客列表/详情渲染
 │   ├── render-projects.js  # 项目展示渲染（含卡片及 GitHub/演示链接）
-│   └── data.js             # 静态数据（博客、项目、个人信息等）
+│   ├── render-c-practice.js# 刷题展示页渲染（目录 + 内容区 + 滚动联动）
+│   ├── data.js             # 静态数据（博客、项目、个人信息等）
+│   └── data-c-practice.js  # 题目数据（sync-c-practice.js 自动生成，不手动编辑）
 └── assets/
     └── images/             # 图片资源
 ```

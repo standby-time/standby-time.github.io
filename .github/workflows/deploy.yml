@@ -27,6 +27,17 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
 
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 同步 C 语言刷题数据
+        run: |
+          git clone https://github.com/standby-time/c-practice-100-CaiNiao.git /tmp/c-practice-100-CaiNiao
+          node scripts/sync-c-practice.js /tmp/c-practice-100-CaiNiao
+        continue-on-error: true  # 独立仓库暂未创建时不阻塞部署
+
       - name: 配置 GitHub Pages
         uses: actions/configure-pages@v4
 
