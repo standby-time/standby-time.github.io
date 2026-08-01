@@ -70,76 +70,65 @@ const ContentRenderer = {
    * ================================================================ */
 
   /**
-   * 渲染个人介绍页
+   * 渲染首页
    * @param {HTMLElement} container - 内容区容器
    */
   _renderAbout(container) {
     const data = ABOUT_DATA;
 
     let html = `
-      <!-- 基本信息 -->
+      <!-- Hero 区：头像 + 一句话介绍 + 简介 -->
       <section class="content__section" id="section-profile">
-        <h2 class="content__section-title">个人介绍</h2>
-        <div class="profile-header">
-          <div class="profile-header__avatar">
+        <div class="home-hero">
+          <div class="home-hero__avatar">
             ${data.avatar
               ? `<img src="${data.avatar}" alt="头像">`
               : data.name.charAt(0).toUpperCase()}
           </div>
-          <div class="profile-header__info">
-            <h1 class="profile-header__name">${this._escape(data.name)}</h1>
-            <p class="profile-header__title">${this._escape(data.title)}</p>
-            <p class="profile-header__bio">${this._escape(data.bio).replace(/\n/g, "<br>")}</p>
+          <div class="home-hero__info">
+            <h1 class="home-hero__name">${this._escape(data.name)}</h1>
+            <p class="home-hero__tagline">${this._escape(data.title)}</p>
+            <p class="home-hero__bio">${this._escape(data.bio).replace(/\n/g, "<br>")}</p>
           </div>
         </div>
       </section>
 
-      <!-- 技能专长 -->
+      <!-- 教育背景 -->
+      <section class="content__section" id="section-education">
+        <h2 class="content__section-title">教育背景</h2>
+        <div class="education-card">
+          <div class="education-card__header">
+            <span class="education-card__school">${this._escape(data.education.school)}</span>
+            <span class="education-card__major">${this._escape(data.education.major)}</span>
+            <span class="education-card__period">${this._escape(data.education.period)}</span>
+          </div>
+          <div class="education-card__courses">
+            <span class="education-card__courses-label">核心课程</span>
+            <div class="course-badges">
+              ${data.education.courses.map(c => `<span class="course-badge">${this._escape(c)}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 技术栈 -->
       <section class="content__section" id="section-skills">
-        <h2 class="content__section-title">技能专长</h2>
+        <h2 class="content__section-title">技术栈</h2>
     `;
 
-    /* 技能分组（小卡片形式） */
+    /* 技能分组：只显示名称标签 */
     data.skills.forEach(group => {
       html += `
-        <div class="skills-group">
-          <h3 class="skills-group__title">${this._escape(group.group)}</h3>
-          <div class="skill-cards">
-      `;
-      group.items.forEach(skill => {
-        html += `
-          <div class="skill-card">
-            <div class="skill-card__name">${this._escape(skill.name)}</div>
-            <div class="skill-card__desc">${this._escape(skill.desc)}</div>
+        <div class="skill-tags-group">
+          <h3 class="skill-tags-group__title">${this._escape(group.group)}</h3>
+          <div class="skill-tags">
+            ${group.items.map(s => `<span class="skill-tag">${this._escape(s.name)}</span>`).join("")}
           </div>
-        `;
-      });
-      html += `</div></div>`;
+        </div>
+      `;
     });
 
     html += `</section>`;
-
-    /* 教育经历 */
-    html += `
-      <section class="content__section" id="section-education">
-        <h2 class="content__section-title">教育经历</h2>
-        <div class="timeline">
-    `;
-
-    data.education.forEach(edu => {
-      html += `
-        <div class="timeline-item">
-          <div class="timeline-item__period">${this._escape(edu.period)}</div>
-          <div class="timeline-item__title">${this._escape(edu.school)}</div>
-          <div class="timeline-item__desc">${this._escape(edu.desc)}</div>
-        </div>
-      `;
-    });
-
-    html += `
-        </div>
-      </section>
-    `;
 
     container.innerHTML = html;
   },

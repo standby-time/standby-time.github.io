@@ -13,45 +13,48 @@ const SITE_CONFIG = {
 
 /* ---------- 导航板块定义 ---------- */
 const NAV_SECTIONS = [
-  { id: "about",    label: "个人介绍", icon: "👤" },
+  { id: "about",    label: "首页", icon: "🏠" },
   { id: "blog",     label: "学习心得", icon: "📝" },
   { id: "projects", label: "项目展示", icon: "💻" },
   { id: "toolbox",  label: "工具箱",   icon: "🧰" },
   { id: "contact",  label: "联系方式", icon: "📬" },
 ];
 
-/* ---------- 个人介绍数据 ---------- */
+/* ---------- 首页（个人介绍）数据 ---------- */
 const ABOUT_DATA = {
   name: "Standby-Time",
-  title: "计算机专业学生",
+  title: "物联网工程专业学生 | C/C++ 开发者 | 持续学习者",
   avatar: "",  // 头像图片路径，留空则使用文字占位
   bio: "热爱编程与开源，专注于计算机科学基础知识的学习与工程实践。\n喜欢用代码解决实际问题，热衷于探索新技术并分享学习心得。",
   skills: [
     { group: "编程语言", items: [
-      { name: "C/C++", desc: "熟练掌握，能使用 STL 进行算法竞赛和日常开发，理解指针、内存管理等核心概念" },
-      { name: "Python", desc: "熟练使用，能用 Flask 搭建 Web 应用，熟悉数据处理和自动化脚本编写" },
-      { name: "JavaScript", desc: "掌握 ES6+ 语法，熟悉 DOM 操作和异步编程，能独立完成前端交互开发" },
-      { name: "Java", desc: "掌握基础语法和面向对象编程，了解 JVM 基本原理和 Spring 框架基础" },
+      { name: "C/C++" },
+      { name: "Python" },
+      { name: "JavaScript" },
+      { name: "Java" },
     ]},
     { group: "前端技术", items: [
-      { name: "HTML/CSS", desc: "熟练使用语义化标签和 CSS3 布局（Flexbox/Grid），能实现响应式设计和主题系统" },
-      { name: "React", desc: "了解组件化开发思想，能使用 Hooks 进行状态管理，有小型项目实践" },
-      { name: "Vue", desc: "了解 Vue 3 Composition API 和单文件组件，能搭建简单的 SPA 应用" },
+      { name: "HTML/CSS" },
+      { name: "React" },
+      { name: "Vue" },
     ]},
     { group: "工具与平台", items: [
-      { name: "Git/GitHub", desc: "熟练使用 Git 进行版本控制，熟悉分支管理、冲突解决和团队协作工作流" },
-      { name: "VS Code", desc: "主力编辑器，熟悉调试配置、插件生态和自定义工作区设置" },
-      { name: "Linux", desc: "掌握常用命令和 Shell 脚本编写，能在 Linux 环境下进行开发和部署" },
-      { name: "Docker", desc: "了解容器化基本概念，能编写 Dockerfile 和使用 docker-compose 搭建开发环境" },
+      { name: "Git/GitHub" },
+      { name: "VS Code" },
+      { name: "Linux" },
+      { name: "Docker" },
     ]},
   ],
-  education: [
-    {
-      period: "大学期间",
-      school: "计算机科学与技术专业",
-      desc: "系统学习数据结构、算法、操作系统、计算机网络等核心课程，积极参与开源项目和技术社区。",
-    },
-  ],
+  education: {
+    school: "北京工业大学",
+    major: "物联网工程",
+    period: "2022 – 2026",
+    courses: [
+      "数据结构与算法", "计算机组成原理", "面向对象编程", "C/C++ 程序设计",
+      "数据库原理", "计算机网络", "程序设计", "电子传感器",
+      "无线传感器网络", "计算机架构", "物联网信息安全",
+    ],
+  },
 };
 
 /* ---------- 博客文章数据 ---------- */
@@ -471,25 +474,25 @@ const TOOLBOX_DATA = {
 /* 每个板块对应一个侧边栏配置：categories 为顶级分类，可包含子项 */
 const SIDEBAR_CONFIG = {
   about: {
-    title: "个人介绍",
+    title: "首页",
     categories: [
       {
         id: "about-profile",
-        label: "基本信息",
-        subItems: [],                    /* 无子项时为锚点跳转 */
+        label: "个人简介",
+        subItems: [],
         anchor: "section-profile",
       },
       {
-        id: "about-skills",
-        label: "技能专长",
-        subItems: [],
-        anchor: "section-skills",
-      },
-      {
         id: "about-education",
-        label: "教育经历",
+        label: "教育背景",
         subItems: [],
         anchor: "section-education",
+      },
+      {
+        id: "about-skills",
+        label: "技术栈",
+        subItems: [],
+        anchor: "section-skills",
       },
     ],
   },
