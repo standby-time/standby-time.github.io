@@ -323,6 +323,97 @@ c-practice-100-CaiNiao/
 
 ---
 
+## 毕设项目展示（第四次扩展 — 2026-08-02）
+
+### 概述
+
+将毕业设计「脑力负荷追踪系统」作为独立项目展示在网站上。项目为 React Native 移动端应用 + Node.js 后端 + MySQL 数据库的完整系统，不可前端直接部署，详情页使用标准 Markdown 渲染。
+
+### 仓库组织
+
+- **独立仓库 `mental-effort-tracker`**：存放毕设完整源码
+  - GitHub 地址：`https://github.com/standby-time/mental-effort-tracker`
+  - 项目本地路径：`D:\GraduationProject`
+  - 包结构：`MentalEffortTracker/`（React Native 前端） + `backend/`（Node.js 后端）
+  - `.gitignore` 排除 `node_modules/`、`*.exe`、构建产物、日志文件
+
+### 技术架构
+
+```
+┌──────────────────────────────┐     ┌──────────────────────────────┐
+│   React Native App           │────▶│   Node.js Backend            │
+│   (TypeScript)               │     │   (Express)                  │
+│   - 实验任务调度             │     │   - RESTful API              │
+│   - 数据采集与本地缓存       │     │   - MySQL 数据库操作         │
+│   - 通知提醒 (Notifee)       │     │   - ngrok 内网穿透           │
+│   - 数据上传与同步           │     │                              │
+└──────────────────────────────┘     └──────────────┬───────────────┘
+                                                    │
+                                        ┌───────────▼───────────┐
+                                        │   MySQL Database      │
+                                        │   - 用户/实验/任务    │
+                                        │   - N-Back 测评数据   │
+                                        │   - 脑力负荷记录      │
+                                        └───────────────────────┘
+```
+
+- **前端**：React Native 0.84.1，TypeScript，AsyncStorage 本地存储，Notifee 通知，react-native-get-random-values / uuid
+- **后端**：Node.js + Express 5.x，mysql2 连接 MySQL，cors 跨域支持，ngrok 内网穿透
+- **数据库**：MySQL，通过 ngrok TCP 隧道暴露给公网
+- **启动方式**：一键 `start_project.bat` 脚本依次启动后端、ngrok 隧道、Metro 开发服务器
+
+### 项目卡片配置
+
+```js
+// 在 data.js 的 PROJECTS 数组中新增
+{
+  id: "mental-effort-tracker",
+  name: "脑力负荷追踪系统",
+  category: "app",
+  description: "毕业设计。基于 React Native 的移动端脑力负荷追踪工具，支持 N-Back 实验任务、数据采集与云端同步。",
+  techStack: ["React Native", "TypeScript", "Node.js", "Express", "MySQL"],
+  githubUrl: "https://github.com/standby-time/mental-effort-tracker",
+  demoUrl: "",                          // 不可前端部署，无在线演示
+  deployed: false,
+  featured: true,
+  contentMd: "...",                     // Markdown 详情正文
+}
+```
+
+### 项目分类扩展
+
+新增分类 `app`（移动端开发），需同步更新：
+
+| 文件 | 修改点 |
+|------|--------|
+| `js/data.js` | `PROJECT_CATEGORIES` 新增 `{ id: "app", label: "移动开发" }` |
+| `js/data.js` | `SIDEBAR_CONFIG.projects.categories` 新增 `app` 分类项 |
+
+现有分类变为：全部项目 / Web 开发 / 移动开发 / 算法 & 数据结构 / 工具 & 配置
+
+### 详情页
+
+毕设详情页走默认 Markdown 渲染流程（`contentMd` 字段），不需要 `customRenderer`。内容应包括：
+
+- 项目背景与毕设选题说明
+- 技术选型理由（为什么选 React Native / Node.js / MySQL）
+- 系统架构图与模块说明
+- 数据库 ER 图或表结构
+- 实验设计（N-Back 任务流程）
+- 安装与运行说明
+- 项目总结与展望
+
+### 与 C 刷题项目的区别
+
+| 对比维度 | C语言刷题记录 | 脑力负荷追踪系统 |
+|---------|-------------|---------------|
+| 详情渲染 | 自定义渲染器（目录 + 代码滚动联动） | 标准 Markdown 渲染 |
+| 数据来源 | 同步脚本解析 .c 文件 | Markdown 字符串（contentMd） |
+| 项目性质 | 代码合集展示 | 毕设完整系统介绍 |
+| 可部署 | 无前端演示 | 不可前端部署（需移动端 + 后端 + 数据库） |
+
+---
+
 ## 设计系统
 
 ### 配色方案

@@ -427,12 +427,132 @@ cd ~/dotfiles
     contentMd: "",
     customRenderer: "c-practice-100-CaiNiao",
   },
+  {
+    id: "mental-effort-tracker",
+    name: "脑力负荷追踪系统",
+    category: "app",
+    description: "毕业设计。基于 React Native 的移动端脑力负荷追踪工具，支持 N-Back 实验任务、数据采集与云端同步。",
+    techStack: ["React Native", "TypeScript", "Node.js", "Express", "MySQL"],
+    githubUrl: "https://github.com/standby-time/mental-effort-tracker",
+    demoUrl: "",
+    deployed: false,
+    featured: true,
+    contentMd: `\
+## 项目背景
+
+本系统是本科毕业设计作品，旨在构建一个移动端的认知负荷评估与追踪工具。随着社会节奏加快，人们的脑力负荷日益加重，然而现有的脑力负荷测量工具多为实验室设备，缺乏便捷的日常追踪手段。本项目通过智能手机实现认知任务测试与数据采集，为用户提供持续的脑力负荷监测。
+
+## 技术选型理由
+
+### 前端：React Native
+
+- **跨平台**：一套代码同时运行于 Android 和 iOS，降低开发成本
+- **TypeScript**：类型安全，减少运行时错误，提升大型组件代码的可维护性
+- **生态丰富**：AsyncStorage 本地持久化、Notifee 通知调度、社区组件即装即用
+
+### 后端：Node.js + Express
+
+- **轻量高效**：Express 5.x 提供了简洁的 API 路由和中间件机制
+- **统一语言**：前后端皆使用 TypeScript/JavaScript，降低心智负担
+- **mysql2**：支持 Promise API 和连接池，与 MySQL 交互高效可靠
+
+### 数据库：MySQL
+
+- **关系型模型**：实验数据（用户、实验、任务记录）天然适合关系型存储
+- **广泛支持**：成熟的生态和工具链，部署维护便捷
+
+### 内网穿透：ngrok
+
+- 开发阶段后端部署在本地 PC，通过 ngrok 建立 HTTP/TCP 隧道，使移动端 App 可在外网访问后端 API 和 MySQL 数据库
+
+## 系统架构
+
+系统采用 **移动端 + 后端 + 数据库** 三层架构：
+
+- **表现层（React Native App）**：承载实验界面、卡片动画、通知调度，通过 AsyncStorage 缓存本地数据，网络恢复后上传
+- **业务层（Express Server）**：提供 RESTful API，接收游戏记录、处理数据持久化
+- **数据层（MySQL）**：存储用户信息、实验记录、N-Back 测评数据、COGED 决策数据
+
+## 实验设计
+
+### SNAP 认知任务（N-Back）
+
+经典的 N-Back 实验范式，用于评估工作记忆能力：
+
+- **难度等级**：1-Back 到 4-Back，共 4 个难度
+- **回合设置**：每个难度进行 3 轮
+- **刺激材料**：扑克牌序列（A-K），每轮 14 张卡牌依次呈现
+- **任务规则**：当前卡牌与 N 步之前的卡牌匹配时，用户点击屏幕响应
+- **数据记录**：命中数（Hits）、漏报数（Misses）、虚报数（False Alarms）、匹配机会总数
+
+### COGED 认知努力折扣任务
+
+测量用户在不同认知负荷水平间的偏好权衡：
+
+- **比较组**：SNAP-1（低负荷 + 奖励）vs SNAP-2/3/4（高负荷 + 0 奖励）
+- **滴定法调整**：5 轮调整，步长每轮减半（0.5 → 0.25 → 0.125 → 0.0625 → 0.03125）
+- **输出**：认知努力折扣率，反映用户愿意为减少认知努力而牺牲的奖励量
+
+## 功能特性
+
+- **实验流程引擎**：状态机驱动的实验流程（封面 → 规则说明 → N-Back 任务 → 回合结算 → 难度汇总 → COGED 任务 → 总结），全自动化推进
+- **卡牌动画**：Animated API 驱动淡入淡出，模拟真实卡牌呈现节奏
+- **通知调度**：基于 Notifee 的每日三次、每周七天定时提醒，帮助实验参与者保持规律的测评节奏
+- **离线数据保护**：AsyncStorage 本地缓存 + 上传状态追踪，网络中断时不丢数据
+- **数据同步**：StorageManager 封装上传逻辑，支持重试和队列管理
+
+## 安装与运行
+
+\`\`\`bash
+# 1. 克隆仓库
+git clone https://github.com/standby-time/mental-effort-tracker.git
+
+# 2. 启动后端
+cd mental-effort-tracker/backend
+npm install
+node server.js                    # 后端运行在 :3000
+
+# 3. 启动 ngrok 隧道（另开终端）
+cd mental-effort-tracker/backend
+ngrok http 3000                   # HTTP 隧道供 App 访问 API
+ngrok tcp 3306                    # TCP 隧道供 App 直连 MySQL
+
+# 4. 启动 React Native
+cd mental-effort-tracker/MentalEffortTracker
+npm install
+npx react-native start --reset-cache
+npx react-native run-android     # 连接 Android 设备或模拟器
+\`\`\`
+
+> 也可双击根目录 \`start_project.bat\` 一键启动步骤 1-4。
+
+## 数据库表结构
+
+| 表名 | 说明 | 关键字段 |
+|------|------|---------|
+| \`game_records\` | 实验记录主表 | user_id, task_type, n_back_level, round_number, hits, misses, false_alarms |
+| \`coged_records\` | COGED 决策记录 | user_id, target_n_back, offer_amount, user_choice, iteration |
+| \`upload_log\` | 上传日志 | record_id, upload_time, status |
+
+## 项目总结
+
+本项目从脑力负荷评估的实际需求出发，完整实现了从认知实验设计、移动端交互开发、后端服务搭建到数据持久化的全链路。主要收获包括：
+
+1. **React Native 工程化实践**：掌握状态管理、动画、原生模块调用等核心能力
+2. **认知心理学实验的数字化实现**：将学术实验范式转化为可用 App
+3. **前后端联调与网络穿透**：解决移动端开发中的实际通信问题
+4. **数据完整性保护**：离线缓存 + 重试机制保障实验数据不丢失
+
+后续可扩展方向：引入更多认知范式（Stroop、数字广度等）、增加数据可视化仪表盘、支持多用户组管理。
+`,
+  },
 ];
 
 /* ---------- 项目分类定义（对应侧边栏目录结构） ---------- */
 const PROJECT_CATEGORIES = [
   { id: "all",  label: "全部项目" },
   { id: "web",  label: "Web 开发" },
+  { id: "app",  label: "移动开发" },
   { id: "algo", label: "算法 & 数据结构" },
   { id: "tools",label: "工具 & 配置" },
 ];
@@ -534,6 +654,15 @@ const SIDEBAR_CONFIG = {
         id: "proj-web",
         label: "Web 开发",
         subItems: PROJECTS.filter(p => p.category === "web").map(p => ({
+          id: `proj-${p.id}`,
+          label: p.name,
+          anchor: `project-${p.id}`,
+        })),
+      },
+      {
+        id: "proj-app",
+        label: "移动开发",
+        subItems: PROJECTS.filter(p => p.category === "app").map(p => ({
           id: `proj-${p.id}`,
           label: p.name,
           anchor: `project-${p.id}`,
