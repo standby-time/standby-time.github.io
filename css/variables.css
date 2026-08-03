@@ -66,7 +66,7 @@
   /* ---- 布局尺寸 ---- */
   --topbar-height: 5vh;               /* 顶部细栏高度 */
   --navbar-height: 44px;               /* 导航栏高度 */
-  --sidebar-width: 260px;              /* 左侧目录栏宽度 */
+  --sidebar-width: 210px;              /* 左侧目录栏宽度 */
   --sidebar-collapsed-width: 0px;      /* 目录栏折叠后宽度 */
 
   /* ---- 滚动条 ---- */
@@ -74,38 +74,46 @@
   --scrollbar-track: transparent;
 }
 
-/* ---------- 浅色主题 ---------- */
+/* ---------- 浅色主题（2026-08-03 重新设计） ---------- */
+/* 设计方向：暖白纸质感，高对比度文字，代码块对齐 VS Code Light+ 风格 */
 [data-theme="light"] {
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f5f5f5;
-  --color-bg-tertiary: #eaeaea;
-  --color-bg-hover: #e8e8e8;
-  --color-bg-card: #f9f9f9;
+  /* ---- 背景色（暖白调，逐级加深 ---- */
+  --color-bg-primary: #fdfcfb;          /* 主背景（内容区），极微暖调 */
+  --color-bg-secondary: #f3f1ef;        /* 次级背景（侧边栏、导航栏） */
+  --color-bg-tertiary: #e7e4e1;         /* 三级背景（顶部细栏、代码块背景） */
+  --color-bg-hover: #eae6e2;            /* 悬停态背景 */
+  --color-bg-card: #f7f5f3;             /* 卡片背景 */
 
-  --color-text-primary: #333333;
-  --color-text-secondary: #666666;
-  --color-text-heading: #1a1a1a;
+  /* ---- 文字色（高对比度，WCAG AA/AAA） ---- */
+  --color-text-primary: #1a1a1a;        /* 正文文字，~16:1 对比度 */
+  --color-text-secondary: #565555;      /* 辅助文字，~7.5:1 对比度（AAA） */
+  --color-text-heading: #0d0d0d;        /* 标题文字 */
 
-  --color-accent: #0078d4;
-  --color-accent-hover: #106ebe;
-  --color-accent-light: rgba(0, 120, 212, 0.1);
+  /* ---- 强调色 ---- */
+  --color-accent: #0d6bc3;              /* 主强调色，~5.5:1 对比度 */
+  --color-accent-hover: #08529e;        /* 悬停态 */
+  --color-accent-light: rgba(13, 107, 195, 0.1); /* 淡化版（选中背景） */
 
-  --color-border: #d4d4d4;
-  --color-border-light: #c0c0c0;
+  /* ---- 边框（可见度提升） ---- */
+  --color-border: #cfccc9;              /* 边框/分割线 */
+  --color-border-light: #bab6b2;        /* 较亮边框（输入框等） */
 
-  --color-code-bg: #f3f3f3;
-  --color-code-text: #333333;
-  --color-code-keyword: #0000ff;
-  --color-code-string: #a31515;
-  --color-code-function: #795e26;
-  --color-code-comment: #008000;
-  --color-code-number: #098658;
-  --color-code-operator: #333333;
-  --color-code-line-highlight: #e8e8e8;
+  /* ---- 代码块配色（对齐 VS Code Light+ 风格） ---- */
+  --color-code-bg: #f3f1ef;             /* 代码块背景 */
+  --color-code-text: #1a1a1a;           /* 代码默认文字 */
+  --color-code-keyword: #0550ae;         /* 关键字（蓝） */
+  --color-code-string: #0a644b;          /* 字符串（绿） */
+  --color-code-function: #8250df;        /* 函数名（紫） */
+  --color-code-comment: #656d76;         /* 注释（灰） */
+  --color-code-number: #0550ae;          /* 数字（蓝） */
+  --color-code-operator: #1a1a1a;        /* 运算符 */
+  --color-code-line-highlight: #eae6e2;  /* 当前行高亮 */
 
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-topbar: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* ---- 阴影 ---- */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-topbar: 0 1px 3px rgba(0, 0, 0, 0.08);
 
-  --scrollbar-thumb: #c0c0c0;
+  /* ---- 滚动条 ---- */
+  --scrollbar-thumb: #c4c0bb;
   --scrollbar-track: transparent;
 }

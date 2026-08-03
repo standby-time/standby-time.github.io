@@ -688,14 +688,14 @@ details[open] .c-practice__approach-summary::before {
 .c-hl-number   { color: #b5cea8; }  /* 数字（浅绿） */
 
 /* 浅色主题下的高亮颜色调整 */
-[data-theme="light"] .c-hl-keyword  { color: #0000ff; }
-[data-theme="light"] .c-hl-comment  { color: #008000; }
-[data-theme="light"] .c-hl-string   { color: #a31515; }
-[data-theme="light"] .c-hl-number   { color: #098658; }
+[data-theme="light"] .c-hl-keyword  { color: var(--color-code-keyword); }
+[data-theme="light"] .c-hl-comment  { color: var(--color-code-comment); }
+[data-theme="light"] .c-hl-string   { color: var(--color-code-string); }
+[data-theme="light"] .c-hl-number   { color: var(--color-code-number); }
 
 [data-theme="light"] .c-practice__code {
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--color-code-bg);
+  color: var(--color-code-text);
 }
 
 /* ================================================================

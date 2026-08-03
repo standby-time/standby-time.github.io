@@ -46,6 +46,11 @@ const ContentRenderer = {
    * @param {string} filter - 筛选关键字
    */
   applyFilter(filter) {
+    /* 如果从 C 刷题详情页切回列表，先清理 observer */
+    if (typeof CPracticeRenderer !== "undefined") {
+      CPracticeRenderer.destroy();
+    }
+
     const section = Router.currentSection;
     const contentEl = document.getElementById("mainContent");
     if (section === "blog") {

@@ -314,9 +314,9 @@
   border-left-color: var(--color-accent);
 }
 
-/* 第二级目录项（更深缩进） */
+/* 第二级目录项（较浅缩进，节省横向空间） */
 .sidebar__item--sub {
-  padding-left: calc(var(--space-md) + var(--space-xl));
+  padding-left: calc(var(--space-sm) + var(--space-lg));
   font-size: 0.8rem;
 }
 

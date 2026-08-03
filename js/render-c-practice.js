@@ -15,9 +15,6 @@ const CPracticeRenderer = {
    * 入口：渲染刷题展示完整页面
    */
   render(container, project) {
-    const sidebar = document.getElementById("sidebar");
-    if (sidebar) sidebar.style.display = "none";
-
     container.innerHTML = this._buildHTML(project);
     this._renderProblemList(container);
     this._renderProblemContent(container);
@@ -185,8 +182,6 @@ const CPracticeRenderer = {
     const backBtn = container.querySelector("#ctBackBtn");
     if (backBtn) {
       backBtn.addEventListener("click", () => {
-        const sidebar = document.getElementById("sidebar");
-        if (sidebar) sidebar.style.display = "";
         Router.go("#projects");
       });
     }
@@ -226,8 +221,6 @@ const CPracticeRenderer = {
       this._observer.disconnect();
       this._observer = null;
     }
-    const sidebar = document.getElementById("sidebar");
-    if (sidebar) sidebar.style.display = "";
   },
 
   _esc(str) {
