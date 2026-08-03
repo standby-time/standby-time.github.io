@@ -419,6 +419,88 @@ c-practice-100-CaiNiao/
 
 ---
 
+## 学习资源模块（第五次扩展 — 2026-08-03 重新设计）
+
+### 概述
+
+将原"工具箱"模块重构为"学习资源"，聚焦于学习资料和在线教程的分类整理。原模块中电子书链接为无效占位链接，本次补充了机器学习、计算机系统等方向的真实资源链接。
+
+### 模块命名
+
+- 导航栏标签：`学习资源`（原 `工具箱`）
+- 路由 hash：保留 `#toolbox`（不影响现有链接和书签）
+- 图标：📚（原 🧰）
+
+### 数据分类
+
+| 分类 ID | 分类名 | 说明 |
+|---------|--------|------|
+| `ml` | 机器学习 | 吴恩达课程、南瓜书、莫烦教程等 ML 学习资料 |
+| `cs-systems` | 计算机系统 | CSAPP、CMU 15-213、计算机系统要素等系统级课程 |
+| `tutorials` | 教程网站 | 菜鸟教程、MDN、Hello 算法、CS 自学指南 |
+| `tools` | 开发工具 | JSON 解析、正则测试、Carbon 代码截图、Excalidraw |
+
+### 机器学习资源
+
+| 名称 | 链接 | 说明 |
+|------|------|------|
+| 吴恩达机器学习公开课 | `https://www.coursera.org/learn/machine-learning` | Coursera 经典 ML 入门课程 |
+| 斯坦福ML中文笔记 | `https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes` | 吴恩达课程中文字幕与笔记 |
+| 莫烦Python机器学习 | `https://github.com/MorvanZhou/tutorials` | 中文 ML 实战教程代码 |
+| 南瓜书 | `https://github.com/datawhalechina/pumpkin-book` | 《机器学习》（西瓜书）公式详解 |
+
+### 计算机系统资源
+
+| 名称 | 链接 | 说明 |
+|------|------|------|
+| CSAPP 官方主页 | `https://csapp.cs.cmu.edu/` | 《深入理解计算机系统》官网与实验 |
+| CSAPP 豆瓣 | `https://book.douban.com/subject/27000879/` | 书籍介绍与读者评价 |
+| CMU 15-213 课程 | `https://www.cs.cmu.edu/~213/` | CMU 计算机系统导论课程主页 |
+| 计算机系统要素 | `https://book.douban.com/subject/1998341/` | 《The Elements of Computing Systems》豆瓣页 |
+
+### 数据结构
+
+```js
+const LEARNING_RESOURCES = {
+  ml: [
+    { name: '', url: '', desc: '' },
+  ],
+  'cs-systems': [
+    { name: '', url: '', desc: '' },
+  ],
+  tutorials: [
+    { name: '', url: '', desc: '' },
+  ],
+  tools: [
+    { name: '', url: '', desc: '' },
+  ],
+};
+```
+
+数据变量名从 `TOOLBOX_DATA` 改为 `LEARNING_RESOURCES`，结构从 `{ tools, websites, ebooks }` 改为 `{ ml, 'cs-systems', tutorials, tools }`。
+
+### 渲染页面
+
+- 页面标题：`学习资源`
+- 副标题描述：更新为学习资料和工具说明
+- 每个分类渲染为独立的 `<section>`，带 id 锚点（如 `section-res-ml`），支持侧边栏锚点跳转
+- 每个资源项渲染为链接卡片（复用 `.toolbox-card` 样式）
+
+### 涉及修改的文件
+
+| 文件 | 修改点 |
+|------|--------|
+| `js/data.js` | `NAV_SECTIONS` 标签改为"学习资源"、图标改为 📚；`TOOLBOX_DATA` → `LEARNING_RESOURCES`，重新组织数据结构；`SIDEBAR_CONFIG.toolbox` 更新 title 和 categories |
+| `js/render-content.js` | `_renderToolbox()` 改为引用新数据结构，更新标题和描述文字 |
+| `css/pages.css` | 检查 `.toolbox-card` 等样式是否需要调整 |
+
+### 路由
+
+- hash 保留 `#toolbox`，不影响现有书签和链接
+- 侧边栏目录项点击 → `scrollIntoView` 滚动到对应分类 section
+
+---
+
 ## 设计系统
 
 ### 配色方案
@@ -547,11 +629,12 @@ c-practice-100-CaiNiao/
 1. **个人介绍**：头像、简介、技能标签/进度条
 2. **学习心得（博客）**：文章列表，按时间排列，支持分类/标签
 3. **项目展示**：项目卡片（名称、描述、技术栈、GitHub/演示链接），点击卡片进入项目详情页；与 GitHub 独立仓库关联
-4. **联系方式**：邮箱、GitHub、社交媒体链接等
+4. **学习资源**：分类整理的在线学习资料，包括教程网站、机器学习资源、计算机系统经典课程等，以链接卡片形式展示
+5. **联系方式**：邮箱、GitHub、社交媒体链接等
 
 ### 路由设计
 
-- 纯前端路由：使用 `hash`（`#about`、`#blog`、`#projects`、`#contact`）
+- 纯前端路由：使用 `hash`（`#about`、`#blog`、`#projects`、`#toolbox`、`#contact`）
 - 欢迎页为默认路由（`#welcome` 或 `/`），进入主页后不再显示欢迎页
 - 导航栏点击切换 hash，JS 监听 hash 变化渲染对应板块
 - **子路由**（类比博客的 `#blog/<post-id>`）：

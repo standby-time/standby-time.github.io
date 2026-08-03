@@ -486,63 +486,52 @@ const ContentRenderer = {
   },
 
   /* ================================================================
-   * 工具箱
+   * 学习资源
    * ================================================================ */
 
   /**
-   * 渲染工具箱页
+   * 渲染学习资源页
    * @param {HTMLElement} container
    */
   _renderToolbox(container) {
-    const data = TOOLBOX_DATA;
+    const data = LEARNING_RESOURCES;
+
+    const categories = [
+      { key: "ml",          id: "section-res-ml",          title: "机器学习" },
+      { key: "cs-systems",  id: "section-res-cs-systems",  title: "计算机系统" },
+      { key: "tutorials",   id: "section-res-tutorials",   title: "教程网站" },
+      { key: "tools",       id: "section-res-tools",       title: "开发工具" },
+    ];
 
     let html = `
       <div class="content__section">
-        <h2 class="content__section-title">工具箱</h2>
+        <h2 class="content__section-title">学习资源</h2>
         <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--space-lg);">
-          日常开发和学习中常用的在线工具、参考网站和电子书资源
+          计算机专业学习资料与在线资源分类整理，包含机器学习、计算机系统、教程网站和开发工具
         </p>
     `;
 
-    /* 在线工具 */
-    html += `
-      <section class="content__section" id="section-toolbox-tools">
-        <h3 class="content__subsection-title">在线工具</h3>
-        <div class="toolbox-grid">
-    `;
-    data.tools.forEach(item => {
-      html += this._buildToolboxCard(item);
-    });
-    html += `</div></section>`;
+    categories.forEach(cat => {
+      const items = data[cat.key];
+      if (!items || items.length === 0) return;
 
-    /* 常用网站 */
-    html += `
-      <section class="content__section" id="section-toolbox-websites">
-        <h3 class="content__subsection-title">常用网站</h3>
-        <div class="toolbox-grid">
-    `;
-    data.websites.forEach(item => {
-      html += this._buildToolboxCard(item);
+      html += `
+        <section class="content__section" id="${cat.id}">
+          <h3 class="content__subsection-title">${cat.title}</h3>
+          <div class="toolbox-grid">
+      `;
+      items.forEach(item => {
+        html += this._buildToolboxCard(item);
+      });
+      html += `</div></section>`;
     });
-    html += `</div></section>`;
-
-    /* 电子书 */
-    html += `
-      <section class="content__section" id="section-toolbox-ebooks">
-        <h3 class="content__subsection-title">电子书</h3>
-        <div class="toolbox-grid">
-    `;
-    data.ebooks.forEach(item => {
-      html += this._buildToolboxCard(item);
-    });
-    html += `</div></section>`;
 
     html += `</div>`;
     container.innerHTML = html;
   },
 
   /**
-   * 构建工具箱链接卡片
+   * 构建学习资源链接卡片
    * @param {Object} item - { name, url, desc }
    * @returns {string} HTML 字符串
    */

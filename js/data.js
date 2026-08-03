@@ -16,7 +16,7 @@ const NAV_SECTIONS = [
   { id: "about",    label: "首页", icon: "🏠" },
   { id: "blog",     label: "学习心得", icon: "📝" },
   { id: "projects", label: "项目展示", icon: "💻" },
-  { id: "toolbox",  label: "工具箱",   icon: "🧰" },
+  { id: "toolbox",  label: "学习资源", icon: "📚" },
   { id: "contact",  label: "联系方式", icon: "📬" },
 ];
 
@@ -238,7 +238,7 @@ const PROJECTS = [
 - **个人介绍** — 基本信息、技能卡片、教育时间线
 - **学习心得** — 博客列表 + 标签筛选 + Markdown 渲染详情
 - **项目展示** — 卡片式布局，链接 GitHub 仓库和在线演示
-- **工具箱** — 常用开发工具、网站、电子书资源汇总
+- **学习资源** — 机器学习、计算机系统、教程网站、开发工具分类整理
 - **联系方式** — 邮箱、GitHub 等联系方式展示
 
 ## 部署方案
@@ -567,26 +567,32 @@ const CONTACT_DATA = {
   ],
 };
 
-/* ---------- 工具箱数据 ---------- */
-const TOOLBOX_DATA = {
+/* ---------- 学习资源数据 ---------- */
+const LEARNING_RESOURCES = {
+  ml: [
+    { name: "吴恩达机器学习公开课", url: "https://www.coursera.org/learn/machine-learning", desc: "Coursera 经典机器学习入门课程" },
+    { name: "斯坦福 ML 中文笔记", url: "https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes", desc: "吴恩达课程中文字幕与配套笔记" },
+    { name: "莫烦 Python 机器学习", url: "https://github.com/MorvanZhou/tutorials", desc: "中文机器学习实战教程与代码" },
+    { name: "南瓜书", url: "https://github.com/datawhalechina/pumpkin-book", desc: "《机器学习》（西瓜书）公式详解与推导" },
+  ],
+  "cs-systems": [
+    { name: "CSAPP 官方主页", url: "https://csapp.cs.cmu.edu/", desc: "《深入理解计算机系统》官网与 Lab 实验" },
+    { name: "CSAPP 豆瓣", url: "https://book.douban.com/subject/27000879/", desc: "书籍介绍、读者评价与学习笔记汇总" },
+    { name: "CMU 15-213 课程", url: "https://www.cs.cmu.edu/~213/", desc: "CMU 计算机系统导论课程主页（CSAPP 配套）" },
+    { name: "计算机系统要素", url: "https://book.douban.com/subject/1998341/", desc: "《The Elements of Computing Systems》Nand2Tetris" },
+  ],
+  tutorials: [
+    { name: "菜鸟教程", url: "https://www.runoob.com", desc: "编程入门教程网站，涵盖多种语言和技术栈" },
+    { name: "MDN Web Docs", url: "https://developer.mozilla.org/zh-CN/", desc: "Mozilla 前端技术权威文档" },
+    { name: "Hello 算法", url: "https://www.hello-algo.com", desc: "动画图解数据结构与算法，直观易理解" },
+    { name: "CS 自学指南", url: "https://csdiy.wiki", desc: "计算机科学自学路径与资源汇总" },
+  ],
   tools: [
     { name: "JSON 在线解析", url: "https://www.json.cn", desc: "JSON 格式化、校验与转换工具" },
     { name: "在线正则测试", url: "https://regex101.com", desc: "正则表达式在线调试与测试" },
     { name: "Carbon 代码截图", url: "https://carbon.now.sh", desc: "生成精美的代码片段分享图" },
     { name: "Excalidraw", url: "https://excalidraw.com", desc: "手绘风格的在线白板与示意图工具" },
-  ],
-  websites: [
-    { name: "菜鸟教程", url: "https://www.runoob.com", desc: "编程入门教程网站，涵盖多种语言和技术栈" },
-    { name: "Hello 算法", url: "https://www.hello-algo.com", desc: "动画图解数据结构与算法，直观易理解" },
-    { name: "MDN Web Docs", url: "https://developer.mozilla.org/zh-CN/", desc: "Mozilla 前端技术权威文档" },
-    { name: "CS 自学指南", url: "https://csdiy.wiki", desc: "计算机科学自学路径与资源汇总" },
     { name: "GitHub", url: "https://github.com", desc: "全球最大的代码托管与协作平台" },
-    { name: "Stack Overflow", url: "https://stackoverflow.com", desc: "程序员问答社区，解决技术难题" },
-  ],
-  ebooks: [
-    { name: "机器学习（西瓜书）", url: "https://github.com/...", desc: "周志华《机器学习》配套资源与公式推导" },
-    { name: "CSAPP", url: "https://github.com/...", desc: "《深入理解计算机系统》学习笔记与实验" },
-    { name: "算法导论", url: "https://github.com/...", desc: "CLRS 经典教材，算法学习必备参考" },
   ],
 };
 
@@ -689,25 +695,31 @@ const SIDEBAR_CONFIG = {
     ],
   },
   toolbox: {
-    title: "工具箱",
+    title: "学习资源",
     categories: [
       {
-        id: "toolbox-tools",
-        label: "在线工具",
+        id: "res-ml",
+        label: "机器学习",
         subItems: [],
-        anchor: "section-toolbox-tools",
+        anchor: "section-res-ml",
       },
       {
-        id: "toolbox-websites",
-        label: "常用网站",
+        id: "res-cs-systems",
+        label: "计算机系统",
         subItems: [],
-        anchor: "section-toolbox-websites",
+        anchor: "section-res-cs-systems",
       },
       {
-        id: "toolbox-ebooks",
-        label: "电子书",
+        id: "res-tutorials",
+        label: "教程网站",
         subItems: [],
-        anchor: "section-toolbox-ebooks",
+        anchor: "section-res-tutorials",
+      },
+      {
+        id: "res-tools",
+        label: "开发工具",
+        subItems: [],
+        anchor: "section-res-tools",
       },
     ],
   },
