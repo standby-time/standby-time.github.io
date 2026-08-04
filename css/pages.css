@@ -172,6 +172,88 @@
   font-family: var(--font-code);
 }
 
+/* ---- 每日一句卡片 ---- */
+
+/* 三极行楷简体 — 自托管子集化 WOFF2（仅含每日一句用到的 269 个字符） */
+@font-face {
+  font-family: "Sanji Xingkai";
+  src: url("../assets/fonts/sanji-xingkai.woff2") format("woff2");
+  font-display: swap;
+}
+
+.daily-quote-card {
+  display: flex;
+  gap: var(--space-lg);
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl) var(--space-lg);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 卡片左侧大引号装饰 */
+.daily-quote-card__icon {
+  flex-shrink: 0;
+  font-family: "Sanji Xingkai";
+  font-size: 3rem;
+  color: var(--color-accent);
+  line-height: 1;
+  opacity: 0.35;
+  user-select: none;
+  margin-top: -8px;
+}
+
+/* 卡片右侧内容区 */
+.daily-quote-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 短句居中模式（仅内容居中，引号和作者位置不变） */
+.daily-quote-card--center .daily-quote-card__body {
+  justify-content: center;
+}
+
+.daily-quote-card--center .daily-quote-card__text {
+  text-align: center;
+}
+
+/* 句子文字 */
+.daily-quote-card__text {
+  font-family: "Sanji Xingkai";
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-sm);
+  min-height: 1.7em;
+}
+
+/* 打字中状态 — 右侧闪烁光标 */
+.daily-quote-card__text--typing {
+  border-right: 2px solid var(--color-accent);
+  padding-right: 2px;
+  animation: blink-caret 0.75s step-end infinite;
+}
+
+/* 作者署名 — Georgia 衬线体，与中文行楷搭配协调 */
+.daily-quote-card__author {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  text-align: right;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.daily-quote-card__author--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ---- 技术栈（简洁标签） ---- */
 .skill-tags-group {
   margin-bottom: var(--space-md);

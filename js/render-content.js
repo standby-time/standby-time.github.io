@@ -98,6 +98,17 @@ const ContentRenderer = {
         </div>
       </section>
 
+      <!-- 每日一句卡片 -->
+      <section class="content__section" id="section-daily-quote">
+        <div class="daily-quote-card" id="dailyQuoteCard">
+          <div class="daily-quote-card__icon">"</div>
+          <div class="daily-quote-card__body">
+            <p class="daily-quote-card__text" id="dailyQuoteText"></p>
+            <p class="daily-quote-card__author" id="dailyQuoteAuthor"></p>
+          </div>
+        </div>
+      </section>
+
       <!-- 教育背景 -->
       <section class="content__section" id="section-education">
         <h2 class="content__section-title">教育背景</h2>
@@ -136,6 +147,9 @@ const ContentRenderer = {
     html += `</section>`;
 
     container.innerHTML = html;
+
+    /* 启动每日一句打字机动画 */
+    this._animateDailyQuote(container);
   },
 
   /* ================================================================
@@ -618,6 +632,51 @@ const ContentRenderer = {
   /* ================================================================
    * 工具函数
    * ================================================================ */
+
+  /**
+   * 每日一句打字机动画
+   * @param {HTMLElement} container
+   */
+  _animateDailyQuote(container) {
+    const textEl = container.querySelector("#dailyQuoteText");
+    const authorEl = container.querySelector("#dailyQuoteAuthor");
+    const cardEl = container.querySelector("#dailyQuoteCard");
+    if (!textEl || !authorEl) return;
+
+    const quote = getDailyQuote();
+    const fullText = quote.text;
+    const author = `—— ${quote.author}`;
+    const speed = 60; // ms/char
+    let idx = 0;
+
+    /* 根据句子长度动态调字号：≤6字 → 2.2rem，每多1字减0.04rem，下限1.1rem */
+    const len = fullText.length;
+    const fontSize = Math.max(1.1, Math.min(2.2, 2.2 - (len - 6) * 0.04));
+    textEl.style.fontSize = `${fontSize}rem`;
+
+    /* 短句（≤10字）居中展示 */
+    if (len <= 10 && cardEl) {
+      cardEl.classList.add("daily-quote-card--center");
+    }
+
+    /* 文字区域显示闪烁光标 */
+    textEl.classList.add("daily-quote-card__text--typing");
+
+    function typeChar() {
+      if (idx < fullText.length) {
+        textEl.textContent += fullText[idx];
+        idx++;
+        setTimeout(typeChar, speed);
+      } else {
+        /* 打完文字，移除光标，显示作者 */
+        textEl.classList.remove("daily-quote-card__text--typing");
+        authorEl.textContent = author;
+        authorEl.classList.add("daily-quote-card__author--visible");
+      }
+    }
+
+    typeChar();
+  },
 
   /**
    * HTML 转义，防止 XSS
