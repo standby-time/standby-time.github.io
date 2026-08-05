@@ -527,14 +527,13 @@ const LEARNING_RESOURCES = {
 | 文件 | 修改点 |
 |------|--------|
 | `js/data.js` | 新增 `DAILY_QUOTES` 数组和 `getDailyQuote()` 函数 |
-| `js/data.js` | `SIDEBAR_CONFIG.about.categories` 新增"每日一句"目录项 |
 | `js/render-content.js` | `_renderAbout()` 新增每日一句卡片 HTML 占位 |
 | `js/render-content.js` | 新增 `_animateDailyQuote()` 方法（打字机逻辑） |
 | `css/pages.css` | 新增 `.daily-quote-card` 相关样式 |
 
 ### 设计决策
 - 放在 Hero 区之后、教育背景之前，作为首页的第二内容区块
-- 侧边栏"每日一句"排在"个人简介"之前，因为用户在首页首先看到它
+- 首页无侧边栏，内容自然顺序排列，每日一句卡片夹在 Hero 和其余内容之间
 - 不使用外部 API，内置句子库保证离线可用和加载速度
 
 ---
@@ -618,6 +617,8 @@ const LEARNING_RESOURCES = {
 └────────────┴────────────────────────────────┘
 ```
 
+**注意**：首页（`#about`）不显示左侧目录栏，内容区占满全部宽度。其余模块（博客、项目、学习资源、联系方式）保持左侧目录栏 + 内容区的双栏布局。
+
 ### 各区域详细说明
 
 1. **顶部细栏（Top Bar）**
@@ -637,6 +638,7 @@ const LEARNING_RESOURCES = {
    - 宽度 210px（`--sidebar-width`），独立于中间内容区
    - 子目录项缩进较浅（`--space-sm + --space-lg` = 32px），节省横向空间
    - 目录项点击后中间内容区滚动到对应锚点（或切换内容）
+   - **首页（`#about`）隐藏侧边栏**，其余模块正常显示
 
 4. **中间内容展示区（Main Content）**
    - **独立滚动**：左侧目录和中间内容各自有独立的滚动容器，互不影响
@@ -648,6 +650,7 @@ const LEARNING_RESOURCES = {
 - 左侧目录栏和中间内容区**各自独立滚动**
 - 页面整体不出现全局滚动条（body 高度固定为视口高度）
 - 使用 `overflow: hidden` 在 body，各区域内部使用 `overflow-y: auto`
+- 首页（`#about`）无侧边栏，内容区单独滚动，占满全部可用宽度
 
 ---
 

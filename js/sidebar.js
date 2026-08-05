@@ -13,6 +13,22 @@ const Sidebar = {
    */
   render(section) {
     const sidebarEl = document.getElementById("sidebar");
+    const bookmark = document.getElementById("sidebarBookmark");
+
+    /* 首页不显示侧边栏和书签按钮 */
+    if (section === "about") {
+      if (sidebarEl) {
+        sidebarEl.innerHTML = "";
+        sidebarEl.classList.add("hidden");
+      }
+      if (bookmark) bookmark.classList.add("hidden");
+      return;
+    }
+
+    /* 从首页切换到其他模块时恢复显示 */
+    if (sidebarEl) sidebarEl.classList.remove("hidden");
+    if (bookmark) bookmark.classList.remove("hidden");
+
     const config = SIDEBAR_CONFIG[section];
 
     if (!sidebarEl || !config) {

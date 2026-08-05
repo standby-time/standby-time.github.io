@@ -599,35 +599,6 @@ const LEARNING_RESOURCES = {
 /* ---------- 侧边栏目录结构定义 ---------- */
 /* 每个板块对应一个侧边栏配置：categories 为顶级分类，可包含子项 */
 const SIDEBAR_CONFIG = {
-  about: {
-    title: "首页",
-    categories: [
-      {
-        id: "about-daily-quote",
-        label: "每日一句",
-        subItems: [],
-        anchor: "section-daily-quote",
-      },
-      {
-        id: "about-profile",
-        label: "个人简介",
-        subItems: [],
-        anchor: "section-profile",
-      },
-      {
-        id: "about-education",
-        label: "教育背景",
-        subItems: [],
-        anchor: "section-education",
-      },
-      {
-        id: "about-skills",
-        label: "技术栈",
-        subItems: [],
-        anchor: "section-skills",
-      },
-    ],
-  },
   blog: {
     title: "学习心得",
     categories: [
