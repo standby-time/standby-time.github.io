@@ -24,7 +24,7 @@ const NAV_SECTIONS = [
 const ABOUT_DATA = {
   name: "Standby-Time",
   title: "物联网工程专业学生 | C/C++ 开发者 | 持续学习者",
-  avatar: "",  // 头像图片路径，留空则使用文字占位
+  avatar: "assets/images/avatar.jpg",
   bio: "热爱编程与开源，专注于计算机科学基础知识的学习与工程实践。\n喜欢用代码解决实际问题，热衷于探索新技术并分享学习心得。",
   skills: [
     { group: "编程语言", items: [
