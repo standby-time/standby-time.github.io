@@ -808,28 +808,30 @@ const ContentRenderer = {
       gridHtml += "</div>";
     });
 
-    /* 生成月份标签 */
+    /* 生成月份标签：计算每月跨周数，12px/周（10px 格子 + 2px 间距） */
     const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    let monthsHtml = "";
-    let lastMonth = -1;
+    const monthStarts = []; /* { month, weekIndex } */
     data.weeks.forEach((week, wi) => {
       if (week.days.length === 0) return;
-      const d = new Date(week.days[0].date + "T12:00:00"); /* 避免时区偏移 */
-      const m = d.getMonth();
-      if (m !== lastMonth && wi < data.weeks.length - 1) {
-        const nextWeek = data.weeks[wi + 1];
-        if (!nextWeek || nextWeek.days.length === 0) return;
-        const span = Math.max(1, wi === 0 ? 1 : Math.round(wi / (data.weeks.length / 12)));
-        monthsHtml += `<span class="github-contributions__month" style="width:${span * 15}px;">${MONTH_NAMES[m]}</span>`;
-        lastMonth = m;
+      const m = new Date(week.days[0].date + "T12:00:00").getMonth();
+      if (monthStarts.length === 0 || m !== monthStarts[monthStarts.length - 1].month) {
+        monthStarts.push({ month: m, weekIndex: wi });
       }
     });
+    let monthsHtml = "";
+    for (let i = 0; i < monthStarts.length; i++) {
+      const span = (i + 1 < monthStarts.length ? monthStarts[i + 1].weekIndex : data.weeks.length)
+                 - monthStarts[i].weekIndex;
+      if (span > 0) {
+        monthsHtml += `<span class="github-contributions__month" style="width:${span * 12}px;">${MONTH_NAMES[monthStarts[i].month]}</span>`;
+      }
+    }
 
     /* 周标签 */
     const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
 
     const html = `
-      <section class="github-contributions" id="section-github-contributions">
+      <section class="github-contributions card" id="section-github-contributions">
         <div class="github-contributions__header">
           <span class="github-contributions__title">GitHub</span>
           <span class="github-contributions__total">${data.totalContributions} contributions in the last year</span>

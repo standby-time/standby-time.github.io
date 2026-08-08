@@ -251,11 +251,10 @@
   .home-hero__glow { width: 240px; height: 240px; }
 }
 
-/* ---- GitHub 贡献热力图 ---- */
+/* ---- GitHub 贡献热力图卡片 ---- */
 .github-contributions {
-  max-width: 50%;
-  margin: 0 auto;
-  padding: var(--space-md) 0 var(--space-xl);
+  max-width: 780px;
+  margin: 0 auto var(--space-xl);
 }
 
 .github-contributions__header {
@@ -286,43 +285,40 @@
 .github-contributions__labels {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   padding-top: 2px;
 }
 
 .github-contributions__label {
   font-size: 0.65rem;
   color: var(--color-text-secondary);
-  line-height: 12px;
-  height: 12px;
+  line-height: 10px;
+  height: 10px;
 }
 
 .github-contributions__label--hidden {
   visibility: hidden;
 }
 
-/* 网格容器 */
+/* 网格容器（桌面端无滚动条，全部显示） */
 .github-contributions__grid-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   flex: 1;
 }
 
 .github-contributions__grid {
   display: flex;
-  gap: 3px;
-  min-width: fit-content;
+  gap: 2px;
 }
 
 .github-contributions__week {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
 .github-contributions__day {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 2px;
   flex-shrink: 0;
 }
@@ -330,12 +326,11 @@
 /* 月份标签行 */
 .github-contributions__months {
   display: flex;
-  gap: 3px;
-  margin-left: calc(var(--space-sm) + 24px);  /* 对齐网格（labels 宽度 + gap） */
+  gap: 2px;
+  margin-left: calc(var(--space-sm) + 30px);
   margin-bottom: 4px;
   font-size: 0.65rem;
   color: var(--color-text-secondary);
-  overflow: hidden;
 }
 
 .github-contributions__month {
@@ -365,14 +360,18 @@
 .github-contributions__day[data-level="3"] { background-color: var(--gh-cell-l3); }
 .github-contributions__day[data-level="4"] { background-color: var(--gh-cell-l4); }
 
-/* 模式切换后过渡 */
 .github-contributions__day { transition: background-color 0.3s ease; }
 
-/* 响应式 */
+/* 响应式：移动端允许横向滚动（53 周数据无法在窄屏完全展示） */
 @media (max-width: 768px) {
   .github-contributions {
     max-width: 100%;
-    padding: var(--space-md) var(--space-sm);
+    padding: var(--space-md);
+  }
+
+  .github-contributions__grid-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

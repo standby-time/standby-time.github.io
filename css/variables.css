@@ -39,7 +39,7 @@
   --color-code-line-highlight: #2a2d2e; /* 当前行高亮 */
 
   /* ---- 阴影 ---- */
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.2);
   --shadow-topbar: 0 1px 3px rgba(0, 0, 0, 0.4);
 
   /* ---- 字体 ---- */
@@ -110,7 +110,7 @@
   --color-code-line-highlight: #eae6e2;  /* 当前行高亮 */
 
   /* ---- 阴影 ---- */
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06);
   --shadow-topbar: 0 1px 3px rgba(0, 0, 0, 0.08);
 
   /* ---- 滚动条 ---- */

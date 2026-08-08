@@ -664,11 +664,19 @@ const LEARNING_RESOURCES = {
 
 ---
 
-## GitHub 贡献热力图（第九次扩展 — 2026-08-08）
+## GitHub 贡献热力图（第九次扩展 — 2026-08-08，2026-08-09 卡片化）
 
 ### 概述
 
-在首页 Hero 区下方新增 GitHub 风格贡献热力图，展示当天前一年的贡献数据（7 行 × ~53 列）。数据通过构建时同步脚本获取，渲染为 CSS Grid 格子。
+在首页 Hero 区下方新增 GitHub 风格贡献热力图，展示当天前一年的贡献数据（7 行 × ~53 列）。数据通过构建时同步脚本获取，以卡片形式展示。
+
+### 卡片设计（2026-08-09 更新）
+
+- 复用 `.card` 基类（背景色、边框、圆角 8px、内边距 24px、阴影 0 1px 4px）
+- `max-width: 780px` 居中，确保 53 周格子完整展示无滚动条
+- 每个格子 10px × 10px，间距 2px（对齐 GitHub 官方尺寸）
+- 桌面端无横向滚动条；移动端（≤768px）`overflow-x: auto` 降级
+- `--shadow-card` 统一为 `0 1px 4px`，后续所有卡片遵循此标准
 
 ### 数据流程
 
@@ -714,7 +722,8 @@ render-content.js → 首页渲染
 | `.github/workflows/deploy.yml` | 新增同步步骤（C 刷题同步之前） |
 | `.gitignore` | 新增 `js/data-github-contributions.js` |
 | `js/render-content.js` | 新增 `_appendGitHubContributions()` / `_renderGitHubContributions()`；`_renderAbout()` 中调用 |
-| `css/pages.css` | 新增 `.github-contributions` 样式 + 双主题颜色变量 |
+| `css/pages.css` | 新增 `.github-contributions` 卡片样式 + 双主题颜色变量 + 响应式 |
+| `css/variables.css` | `--shadow-card` 减至 `0 1px 4px`（双主题），统一卡片阴影标准 |
 
 ### 路由
 
