@@ -26,17 +26,11 @@ async function main() {
     process.exit(0);
   }
 
-  /* GraphQL 查询：获取过去一年的贡献日历（显式指定日期范围，确保以当前周为最后一周） */
-  const today = new Date();
-  const toDate = today.toISOString().split("T")[0] + "T23:59:59";
-  const fromDate = new Date(today);
-  fromDate.setFullYear(fromDate.getFullYear() - 1);
-  const fromDateStr = fromDate.toISOString().split("T")[0] + "T00:00:00";
-
+  /* GraphQL 查询：获取过去一年的贡献日历（默认以当天所在周为最后一周） */
   const query = `
     query($username: String!) {
       user(login: $username) {
-        contributionsCollection(from: "${fromDateStr}", to: "${toDate}") {
+        contributionsCollection {
           contributionCalendar {
             totalContributions
             weeks {

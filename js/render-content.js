@@ -850,6 +850,17 @@ const ContentRenderer = {
             </div>
           </div>
         </div>
+        <div class="github-contributions__legend">
+          <span class="github-contributions__legend-label">Less</span>
+          <div class="github-contributions__legend-squares">
+            <div class="github-contributions__day" data-level="0" style="background-color:#ebedf0"></div>
+            <div class="github-contributions__day" data-level="1" style="background-color:#9be9a8"></div>
+            <div class="github-contributions__day" data-level="2" style="background-color:#40c463"></div>
+            <div class="github-contributions__day" data-level="3" style="background-color:#30a14e"></div>
+            <div class="github-contributions__day" data-level="4" style="background-color:#216e39"></div>
+          </div>
+          <span class="github-contributions__legend-label">More</span>
+        </div>
       </section>
     `;
 

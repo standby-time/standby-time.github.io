@@ -378,6 +378,25 @@
 
 .github-contributions__day { transition: background-color 0.3s ease; }
 
+/* 颜色图例（Less / More） */
+.github-contributions__legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.github-contributions__legend-label {
+  font-size: 0.65rem;
+  color: var(--color-text-secondary);
+}
+
+.github-contributions__legend-squares {
+  display: flex;
+  gap: 2px;
+}
+
 /* 响应式：移动端允许横向滚动（53 周数据无法在窄屏完全展示） */
 @media (max-width: 768px) {
   .github-contributions {
