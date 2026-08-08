@@ -788,13 +788,16 @@ const ContentRenderer = {
     const profileSection = container.querySelector("#section-profile");
     if (!profileSection) return;
 
-    /* 计算贡献等级 0-4（对齐 GitHub 标准阈值） */
-    function getLevel(count) {
-      if (count === 0) return 0;
-      if (count <= 4) return 1;
-      if (count <= 9) return 2;
-      if (count <= 19) return 3;
-      return 4;
+    /* 计算贡献等级 0-4，基于 GitHub API 返回的颜色（与 GitHub 完全同步） */
+    function getLevel(color) {
+      const MAP = {
+        "#161b22": 0, "#ebedf0": 0,
+        "#0e4429": 1, "#9be9a8": 1,
+        "#006d32": 2, "#40c463": 2,
+        "#26a641": 3, "#30a14e": 3,
+        "#39d353": 4, "#216e39": 4,
+      };
+      return MAP[color] !== undefined ? MAP[color] : 0;
     }
 
     /* 生成周列的格子 HTML */
@@ -802,8 +805,8 @@ const ContentRenderer = {
     data.weeks.forEach(week => {
       gridHtml += '<div class="github-contributions__week">';
       week.days.forEach(day => {
-        const level = getLevel(day.count);
-        gridHtml += `<div class="github-contributions__day" data-level="${level}" title="${day.date}: ${day.count} contributions" aria-label="${day.date}: ${day.count} contributions"></div>`;
+        const level = getLevel(day.color);
+        gridHtml += `<div class="github-contributions__day" data-level="${level}" style="background-color:${day.color}" title="${day.date}: ${day.count} contributions" aria-label="${day.date}: ${day.count} contributions"></div>`;
       });
       gridHtml += "</div>";
     });
