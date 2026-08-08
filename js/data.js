@@ -702,4 +702,4 @@ const SIDEBAR_CONFIG = {
 
 /* ---------- 首页 Hero 打字机角色文案 ---------- */
 /* 打字机动画循环展示的角色描述（逐字符打出 → 停留 → 删除 → 下一个） */
-const HERO_ROLES = ["A learner", "An explorer"];
+const HERO_ROLES = ["A lifelong learner", "A constant explorer"];

@@ -92,6 +92,7 @@ const ContentRenderer = {
             <p class="home-hero__role" id="heroRoleText"></p>
           </div>
           <div class="home-hero__visual" id="heroAvatarVisual">
+            <div class="home-hero__glow" aria-hidden="true"></div>
             <div class="home-hero__avatar" id="heroAvatar">
               ${data.avatar
                 ? `<img src="${this._escape(data.avatar)}" alt="${this._escape(data.name)} 的头像" decoding="async">`
@@ -678,10 +679,9 @@ const ContentRenderer = {
    * @param {HTMLElement} container - 内容区容器
    */
   _bindHeroTilt(container) {
-    const heroEl = container.querySelector("#homeHero");
     const visualEl = container.querySelector("#heroAvatarVisual");
     const avatarEl = container.querySelector("#heroAvatar");
-    if (!heroEl || !visualEl || !avatarEl) return;
+    if (!visualEl || !avatarEl) return;
 
     /* 触屏设备或用户偏好减弱动效：不启用倾斜 */
     if (window.matchMedia("(hover: none)").matches ||
@@ -690,6 +690,12 @@ const ContentRenderer = {
     const onMove = (e) => {
       const rect = avatarEl.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
+      /* 仅当鼠标在头像扩展区内时才响应（含 24px padding） */
+      const visualRect = visualEl.getBoundingClientRect();
+      if (e.clientX < visualRect.left || e.clientX > visualRect.right ||
+          e.clientY < visualRect.top || e.clientY > visualRect.bottom) {
+        return;
+      }
       const px = (e.clientX - rect.left) / rect.width - 0.5;
       const py = (e.clientY - rect.top) / rect.height - 0.5;
       visualEl.classList.add("home-hero__visual--tracking");
@@ -703,8 +709,10 @@ const ContentRenderer = {
       visualEl.style.setProperty("--tilt-y", "0");
     };
 
+    /* 监听整个 Hero 区域来检测鼠标离开，但只在 visualEl 范围内响应倾斜 */
+    const heroEl = container.querySelector("#homeHero");
     heroEl.addEventListener("mousemove", onMove);
-    heroEl.addEventListener("mouseleave", onLeave);
+    visualEl.addEventListener("mouseleave", onLeave);
 
     this._heroEl = heroEl;
     this._heroMoveHandler = onMove;
