@@ -251,6 +251,131 @@
   .home-hero__glow { width: 240px; height: 240px; }
 }
 
+/* ---- GitHub 贡献热力图 ---- */
+.github-contributions {
+  max-width: 50%;
+  margin: 0 auto;
+  padding: var(--space-md) 0 var(--space-xl);
+}
+
+.github-contributions__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.github-contributions__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+}
+
+.github-contributions__total {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.github-contributions__body {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+/* 周标签（Mon / Wed / Fri） */
+.github-contributions__labels {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 2px;
+}
+
+.github-contributions__label {
+  font-size: 0.65rem;
+  color: var(--color-text-secondary);
+  line-height: 12px;
+  height: 12px;
+}
+
+.github-contributions__label--hidden {
+  visibility: hidden;
+}
+
+/* 网格容器 */
+.github-contributions__grid-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+}
+
+.github-contributions__grid {
+  display: flex;
+  gap: 3px;
+  min-width: fit-content;
+}
+
+.github-contributions__week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.github-contributions__day {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* 月份标签行 */
+.github-contributions__months {
+  display: flex;
+  gap: 3px;
+  margin-left: calc(var(--space-sm) + 24px);  /* 对齐网格（labels 宽度 + gap） */
+  margin-bottom: 4px;
+  font-size: 0.65rem;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+}
+
+.github-contributions__month {
+  flex-shrink: 0;
+}
+
+/* 颜色等级 — 深色主题（GitHub Dark 风格） */
+[data-theme="dark"] {
+  --gh-cell-empty: #1e2a3a;
+  --gh-cell-l1: #0e4429;
+  --gh-cell-l2: #006d32;
+  --gh-cell-l3: #26a641;
+  --gh-cell-l4: #39d353;
+}
+/* 颜色等级 — 浅色主题（GitHub Light 风格） */
+[data-theme="light"] {
+  --gh-cell-empty: #ebedf0;
+  --gh-cell-l1: #9be9a8;
+  --gh-cell-l2: #40c463;
+  --gh-cell-l3: #30a14e;
+  --gh-cell-l4: #216e39;
+}
+
+.github-contributions__day[data-level="0"] { background-color: var(--gh-cell-empty); }
+.github-contributions__day[data-level="1"] { background-color: var(--gh-cell-l1); }
+.github-contributions__day[data-level="2"] { background-color: var(--gh-cell-l2); }
+.github-contributions__day[data-level="3"] { background-color: var(--gh-cell-l3); }
+.github-contributions__day[data-level="4"] { background-color: var(--gh-cell-l4); }
+
+/* 模式切换后过渡 */
+.github-contributions__day { transition: background-color 0.3s ease; }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .github-contributions {
+    max-width: 100%;
+    padding: var(--space-md) var(--space-sm);
+  }
+}
+
 /* ---- 教育背景 ---- */
 .education-card {
   background-color: var(--color-bg-card);

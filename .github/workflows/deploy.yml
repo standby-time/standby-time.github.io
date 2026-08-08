@@ -32,6 +32,12 @@ jobs:
         with:
           node-version: '20'
 
+      - name: 同步 GitHub 贡献数据
+        run: node scripts/sync-github-contributions.js standby-time
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
       - name: 同步 C 语言刷题数据
         run: |
           git clone https://github.com/standby-time/c-practice-100-CaiNiao.git /tmp/c-practice-100-CaiNiao

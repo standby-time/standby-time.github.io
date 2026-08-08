@@ -115,6 +115,9 @@ const ContentRenderer = {
     /* 启动角色打字机循环 + 3D 倾斜 */
     this._animateHeroRoles(container);
     this._bindHeroTilt(container);
+
+    /* 加载 GitHub 贡献表格（动态加载数据脚本，不存在时静默跳过） */
+    this._appendGitHubContributions(container);
   },
 
   /* ================================================================
@@ -746,6 +749,106 @@ const ContentRenderer = {
     if (!avatarEl) return;
     avatarEl.dataset.initial = name.charAt(0).toUpperCase();
     avatarEl.classList.add("home-hero__avatar--fallback");
+  },
+
+  /**
+   * 动态加载 GitHub 贡献数据脚本，加载成功后渲染贡献图
+   * 脚本不存在时（本地开发无同步数据）静默跳过
+   * @param {HTMLElement} container - 内容区容器
+   */
+  _appendGitHubContributions(container) {
+    /* 如果已经加载过（切换页面后再回到首页），直接渲染 */
+    if (typeof GITHUB_CONTRIBUTIONS !== "undefined") {
+      this._renderGitHubContributions(container, GITHUB_CONTRIBUTIONS);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "js/data-github-contributions.js";
+    script.onload = () => {
+      if (typeof GITHUB_CONTRIBUTIONS !== "undefined") {
+        this._renderGitHubContributions(container, GITHUB_CONTRIBUTIONS);
+      }
+    };
+    script.onerror = () => {
+      /* 本地开发无此文件，静默跳过 */
+    };
+    document.head.appendChild(script);
+  },
+
+  /**
+   * 渲染 GitHub 贡献热力图
+   * 7 行（Mon-Sun）× N 周，含月份标签和总数统计
+   * @param {HTMLElement} container - 内容区容器
+   * @param {Object} data - GITHUB_CONTRIBUTIONS 数据
+   */
+  _renderGitHubContributions(container, data) {
+    if (!data || !data.weeks || data.weeks.length === 0) return;
+
+    const profileSection = container.querySelector("#section-profile");
+    if (!profileSection) return;
+
+    /* 计算贡献等级 0-4（对齐 GitHub 标准阈值） */
+    function getLevel(count) {
+      if (count === 0) return 0;
+      if (count <= 4) return 1;
+      if (count <= 9) return 2;
+      if (count <= 19) return 3;
+      return 4;
+    }
+
+    /* 生成周列的格子 HTML */
+    let gridHtml = "";
+    data.weeks.forEach(week => {
+      gridHtml += '<div class="github-contributions__week">';
+      week.days.forEach(day => {
+        const level = getLevel(day.count);
+        gridHtml += `<div class="github-contributions__day" data-level="${level}" title="${day.date}: ${day.count} contributions" aria-label="${day.date}: ${day.count} contributions"></div>`;
+      });
+      gridHtml += "</div>";
+    });
+
+    /* 生成月份标签 */
+    const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let monthsHtml = "";
+    let lastMonth = -1;
+    data.weeks.forEach((week, wi) => {
+      if (week.days.length === 0) return;
+      const d = new Date(week.days[0].date + "T12:00:00"); /* 避免时区偏移 */
+      const m = d.getMonth();
+      if (m !== lastMonth && wi < data.weeks.length - 1) {
+        const nextWeek = data.weeks[wi + 1];
+        if (!nextWeek || nextWeek.days.length === 0) return;
+        const span = Math.max(1, wi === 0 ? 1 : Math.round(wi / (data.weeks.length / 12)));
+        monthsHtml += `<span class="github-contributions__month" style="width:${span * 15}px;">${MONTH_NAMES[m]}</span>`;
+        lastMonth = m;
+      }
+    });
+
+    /* 周标签 */
+    const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
+
+    const html = `
+      <section class="github-contributions" id="section-github-contributions">
+        <div class="github-contributions__header">
+          <span class="github-contributions__title">GitHub</span>
+          <span class="github-contributions__total">${data.totalContributions} contributions in the last year</span>
+        </div>
+        ${monthsHtml ? `<div class="github-contributions__months">${monthsHtml}</div>` : ""}
+        <div class="github-contributions__body">
+          <div class="github-contributions__labels">
+            ${DAY_LABELS.map(l => `<span class="github-contributions__label${l ? "" : " github-contributions__label--hidden"}">${l}</span>`).join("")}
+          </div>
+          <div class="github-contributions__grid-wrap">
+            <div class="github-contributions__grid">
+              ${gridHtml}
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+
+    profileSection.insertAdjacentHTML("afterend", html);
   },
 
   /**

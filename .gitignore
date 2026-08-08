@@ -14,3 +14,6 @@ Thumbs.db
 .DS_Store
 *.swp
 *.swo
+
+# 自动生成的 GitHub 贡献数据（部署时由 sync 脚本生成）
+js/data-github-contributions.js

@@ -664,6 +664,64 @@ const LEARNING_RESOURCES = {
 
 ---
 
+## GitHub 贡献热力图（第九次扩展 — 2026-08-08）
+
+### 概述
+
+在首页 Hero 区下方新增 GitHub 风格贡献热力图，展示当天前一年的贡献数据（7 行 × ~53 列）。数据通过构建时同步脚本获取，渲染为 CSS Grid 格子。
+
+### 数据流程
+
+```
+GitHub GraphQL API
+      ↓ (部署时 fetch)
+sync-github-contributions.js
+      ↓ (生成）
+js/data-github-contributions.js  ← 不提交（.gitignore）
+      ↓ (动态 <script> 加载）
+render-content.js → 首页渲染
+```
+
+### 同步脚本
+
+`scripts/sync-github-contributions.js`：
+- Node.js 脚本，调用 GitHub GraphQL API 查询 `user.contributionsCollection.contributionCalendar`
+- 需要环境变量 `GH_TOKEN` 或 `GITHUB_TOKEN`
+- 生成 `js/data-github-contributions.js`，数据格式：`{ totalContributions, weeks: [{ days: [{ date, count, color }] }] }`
+- 本地开发时无 token 则跳过（exit 0），部署时 CI 注入 `${{ secrets.GITHUB_TOKEN }}`
+
+### 渲染
+
+- `_appendGitHubContributions(container)` — 动态创建 `<script>` 加载数据文件，成功后调用渲染方法
+- `_renderGitHubContributions(container, data)` — 构建 7行×N列格子网格，含月份标签、周标签、总贡献数
+- 数据文件不存在时静默降级，首页仅显示 Hero
+
+### 颜色等级（对齐 GitHub 官方阈值）
+
+| 等级 | 次数 | 深色主题 | 浅色主题 |
+|------|------|---------|---------|
+| 0 | 0 | #1e2a3a | #ebedf0 |
+| 1 | 1-4 | #0e4429 | #9be9a8 |
+| 2 | 5-9 | #006d32 | #40c463 |
+| 3 | 10-19 | #26a641 | #30a14e |
+| 4 | 20+ | #39d353 | #216e39 |
+
+### 涉及修改的文件
+
+| 文件 | 修改点 |
+|------|--------|
+| `scripts/sync-github-contributions.js` | 新增：GraphQL 数据同步脚本 |
+| `.github/workflows/deploy.yml` | 新增同步步骤（C 刷题同步之前） |
+| `.gitignore` | 新增 `js/data-github-contributions.js` |
+| `js/render-content.js` | 新增 `_appendGitHubContributions()` / `_renderGitHubContributions()`；`_renderAbout()` 中调用 |
+| `css/pages.css` | 新增 `.github-contributions` 样式 + 双主题颜色变量 |
+
+### 路由
+
+- 仅首页（`#about`）展示，无路由变更
+
+---
+
 ## 设计系统
 
 ### 配色方案

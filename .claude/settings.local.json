@@ -3,7 +3,9 @@
     "allow": [
       "Bash(node -e \"try { eval\\(require\\('fs'\\).readFileSync\\('js/data.js','utf8'\\).replace\\(/const|let|var|function/g,''\\).replace\\(/\\\\/\\\\*[\\\\s\\\\S]*?\\\\*\\\\//g,''\\).replace\\(/\\\\/\\\\/.*/g,''\\)\\); console.log\\('data.js: OK'\\); } catch\\(e\\) { console.log\\('data.js error:', e.message\\); }\")",
       "Bash(node --check js/data.js)",
-      "Bash(node --check js/render-content.js)"
+      "Bash(node --check js/render-content.js)",
+      "Bash(node --check scripts/sync-github-contributions.js)",
+      "Bash(node scripts/sync-github-contributions.js standby-time)"
     ]
   }
 }
