@@ -664,19 +664,35 @@ const LEARNING_RESOURCES = {
 
 ---
 
-## GitHub 贡献热力图（第九次扩展 — 2026-08-08，2026-08-09 卡片化）
+## GitHub 贡献热力图（第九次扩展 — 2026-08-08，持续迭代至 2026-08-09）
 
 ### 概述
 
 在首页 Hero 区下方新增 GitHub 风格贡献热力图，展示当天前一年的贡献数据（7 行 × ~53 列）。数据通过构建时同步脚本获取，以卡片形式展示。
 
-### 卡片设计（2026-08-09 更新）
+### 卡片设计（2026-08-09 终版）
 
-- 复用 `.card` 基类（背景色、边框、圆角 8px、内边距 24px、阴影 0 1px 4px）
-- `max-width: 780px` 居中，确保 53 周格子完整展示无滚动条
-- 每个格子 10px × 10px，间距 2px（对齐 GitHub 官方尺寸）
+- 复用 `.card` 基类（边框、圆角 8px、内边距 24px），覆盖背景和阴影
+- `max-width: 50%`，与上方 Hero 区宽度一致，`margin: 0 auto` 居中
+- 卡片背景 = 页面背景（`--color-bg-primary`），非 `--color-bg-card`
+- 外圈阴影：默认 `0 0 14px rgba(0,0,0,0.45)`（深），hover `0 0 6px rgba(0,0,0,0.15)`（浅）
+  - 浅色主题：默认 `0 0 14px rgba(0,0,0,0.1)`，hover `0 0 6px rgba(0,0,0,0.04)`
+- 每个格子 12px × 12px，间距 2px（53 周网格 ≈ 740px，填充卡片宽度）
 - 桌面端无横向滚动条；移动端（≤768px）`overflow-x: auto` 降级
-- `--shadow-card` 统一为 `0 1px 4px`，后续所有卡片遵循此标准
+- 底部颜色图例：Less / 5 色方块 / More，右对齐
+- `--shadow-card` 统一为 `0 1px 4px`（`variables.css`），后续所有卡片遵循此标准
+
+### 颜色
+
+- 直接使用 GitHub API 返回的 `color` 字段作为内联背景色，与 GitHub 展示完全一致
+- 同时设置 `data-level` 属性（0-4，基于 API 颜色映射），支持 CSS 变量主题切换
+- 颜色图例使用与 API 一致的浅色主题色值（`#ebedf0` / `#9be9a8` / `#40c463` / `#30a14e` / `#216e39`）
+
+### 月份标签对齐
+
+- 星期标签列固定 `width: 24px`，`flex-shrink: 0`
+- 月份标签 `margin-left: calc(var(--space-sm) + 24px)` = `32px`，与网格第一列精确对齐
+- 月份标签宽度 = `跨周数 × 14px`（12px 格子 + 2px 间距）
 
 ### 数据流程
 
@@ -700,29 +716,33 @@ render-content.js → 首页渲染
 
 ### 渲染
 
-- `_appendGitHubContributions(container)` — 动态创建 `<script>` 加载数据文件，成功后调用渲染方法
-- `_renderGitHubContributions(container, data)` — 构建 7行×N列格子网格，含月份标签、周标签、总贡献数
+- `_appendGitHubContributions(container)` — 动态创建 `<script>` 加载数据文件，onload 调用渲染，onerror 静默跳过
+- `_renderGitHubContributions(container, data)` — 构建 7行×N列网格，含月份标签、周标签、总贡献数、Less/More 颜色图例
+- 每个格子使用 API 返回的 `color` 作为内联 `background-color`，同时通过 `getLevel(color)` 设置 `data-level`
 - 数据文件不存在时静默降级，首页仅显示 Hero
+- 若已加载过（切换页面后回到首页），直接渲染，不重复加载脚本
 
-### 颜色等级（对齐 GitHub 官方阈值）
+### 颜色等级（基于 GitHub API 的 color 字段映射为 level）
 
-| 等级 | 次数 | 深色主题 | 浅色主题 |
-|------|------|---------|---------|
-| 0 | 0 | #1e2a3a | #ebedf0 |
-| 1 | 1-4 | #0e4429 | #9be9a8 |
-| 2 | 5-9 | #006d32 | #40c463 |
-| 3 | 10-19 | #26a641 | #30a14e |
-| 4 | 20+ | #39d353 | #216e39 |
+| 等级 | API 浅色色值 | API 深色色值 | CSS 深色主题 | CSS 浅色主题 |
+|------|------------|------------|------------|------------|
+| 0 | #ebedf0 | #161b22 | #1e2a3a | #ebedf0 |
+| 1 | #9be9a8 | #0e4429 | #0e4429 | #9be9a8 |
+| 2 | #40c463 | #006d32 | #006d32 | #40c463 |
+| 3 | #30a14e | #26a641 | #26a641 | #30a14e |
+| 4 | #216e39 | #39d353 | #39d353 | #216e39 |
+
+- 格子内联颜色直接使用 API `color`（即 GitHub 官方渲染色），CSS 变量色用于图例和主题切换降级
 
 ### 涉及修改的文件
 
 | 文件 | 修改点 |
 |------|--------|
-| `scripts/sync-github-contributions.js` | 新增：GraphQL 数据同步脚本 |
+| `scripts/sync-github-contributions.js` | 新增：GraphQL 数据同步脚本（默认无参数，以当天所在周为最后一周） |
 | `.github/workflows/deploy.yml` | 新增同步步骤（C 刷题同步之前） |
 | `.gitignore` | 新增 `js/data-github-contributions.js` |
-| `js/render-content.js` | 新增 `_appendGitHubContributions()` / `_renderGitHubContributions()`；`_renderAbout()` 中调用 |
-| `css/pages.css` | 新增 `.github-contributions` 卡片样式 + 双主题颜色变量 + 响应式 |
+| `js/render-content.js` | 新增 `_appendGitHubContributions()` / `_renderGitHubContributions()` + `getLevel()`；`_renderAbout()` 中调用 |
+| `css/pages.css` | 新增 `.github-contributions` 卡片样式 + 颜色图例 + 双主题阴影 + 响应式 |
 | `css/variables.css` | `--shadow-card` 减至 `0 1px 4px`（双主题），统一卡片阴影标准 |
 
 ### 路由

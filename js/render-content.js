@@ -811,7 +811,7 @@ const ContentRenderer = {
       gridHtml += "</div>";
     });
 
-    /* 生成月份标签：计算每月跨周数，13px/周（11px 格子 + 2px 间距） */
+    /* 生成月份标签：计算每月跨周数，14px/周（12px 格子 + 2px 间距） */
     const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthStarts = []; /* { month, weekIndex } */
     data.weeks.forEach((week, wi) => {
@@ -826,7 +826,7 @@ const ContentRenderer = {
       const span = (i + 1 < monthStarts.length ? monthStarts[i + 1].weekIndex : data.weeks.length)
                  - monthStarts[i].weekIndex;
       if (span > 0) {
-        monthsHtml += `<span class="github-contributions__month" style="width:${span * 13}px;">${MONTH_NAMES[monthStarts[i].month]}</span>`;
+        monthsHtml += `<span class="github-contributions__month" style="width:${span * 14}px;">${MONTH_NAMES[monthStarts[i].month]}</span>`;
       }
     }
 
