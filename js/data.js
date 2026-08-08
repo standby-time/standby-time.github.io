@@ -17,7 +17,7 @@ const NAV_SECTIONS = [
   { id: "blog",     label: "学习心得", icon: "📝" },
   { id: "projects", label: "项目展示", icon: "💻" },
   { id: "toolbox",  label: "学习资源", icon: "📚" },
-  { id: "contact",  label: "联系方式", icon: "📬" },
+  { id: "contact",  label: "关于", icon: "👤" },
 ];
 
 /* ---------- 首页（个人介绍）数据 ---------- */
@@ -668,6 +668,24 @@ const SIDEBAR_CONFIG = {
           label: p.name,
           anchor: `project-${p.id}`,
         })),
+      },
+    ],
+  },
+  contact: {
+    title: "关于",
+    categories: [
+      {
+        id: "about-me",
+        label: "关于我",
+        subItems: [
+          { id: "about-edu", label: "教育经历", anchor: "section-education" },
+        ],
+      },
+      {
+        id: "about-contact",
+        label: "联系方式",
+        subItems: [],
+        anchor: "section-contact-info",
       },
     ],
   },

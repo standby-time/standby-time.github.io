@@ -109,24 +109,6 @@ const ContentRenderer = {
         </div>
       </section>
 
-      <!-- 教育背景 -->
-      <section class="content__section" id="section-education">
-        <h2 class="content__section-title">教育背景</h2>
-        <div class="education-card">
-          <div class="education-card__header">
-            <span class="education-card__school">${this._escape(data.education.school)}</span>
-            <span class="education-card__major">${this._escape(data.education.major)}</span>
-            <span class="education-card__period">${this._escape(data.education.period)}</span>
-          </div>
-          <div class="education-card__courses">
-            <span class="education-card__courses-label">核心课程</span>
-            <div class="course-badges">
-              ${data.education.courses.map(c => `<span class="course-badge">${this._escape(c)}</span>`).join("")}
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- 技术栈 -->
       <section class="content__section" id="section-skills">
         <h2 class="content__section-title">技术栈</h2>
@@ -560,25 +542,53 @@ const ContentRenderer = {
   },
 
   /* ================================================================
-   * 联系方式
+   * 关于（关于我 + 教育经历 + 联系方式）
    * ================================================================ */
 
   /**
-   * 渲染联系方式页
+   * 渲染关于页
    * @param {HTMLElement} container
    */
   _renderContact(container) {
-    const data = CONTACT_DATA;
+    const edu = ABOUT_DATA.education;
+    const contact = CONTACT_DATA;
 
     let html = `
-      <div class="content__section" id="section-contact-info">
+      <!-- 关于我 -->
+      <section class="content__section" id="section-about-me">
+        <h2 class="content__section-title">关于我</h2>
+        <div class="about-section">
+          <p class="about-section__text">${this._escape(ABOUT_DATA.bio).replace(/\n/g, "<br>")}</p>
+        </div>
+      </section>
+
+      <!-- 教育经历 -->
+      <section class="content__section" id="section-education">
+        <h2 class="content__section-title">教育经历</h2>
+        <div class="education-card">
+          <div class="education-card__header">
+            <span class="education-card__school">${this._escape(edu.school)}</span>
+            <span class="education-card__major">${this._escape(edu.major)}</span>
+            <span class="education-card__period">${this._escape(edu.period)}</span>
+          </div>
+          <div class="education-card__courses">
+            <span class="education-card__courses-label">核心课程</span>
+            <div class="course-badges">
+              ${edu.courses.map(c => `<span class="course-badge">${this._escape(c)}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 联系方式 -->
+      <section class="content__section" id="section-contact-info">
         <h2 class="content__section-title">联系方式</h2>
         <div class="contact-section">
-          <p class="contact-section__text">${this._escape(data.intro)}</p>
+          <p class="contact-section__text">${this._escape(contact.intro)}</p>
           <div class="contact-list">
     `;
 
-    data.methods.forEach(method => {
+    contact.methods.forEach(method => {
       html += `
         <div class="contact-item">
           <div class="contact-item__icon">${this._getContactIcon(method.type)}</div>
@@ -596,7 +606,7 @@ const ContentRenderer = {
     html += `
           </div>
         </div>
-      </div>
+      </section>
     `;
 
     container.innerHTML = html;
