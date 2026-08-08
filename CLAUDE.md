@@ -588,6 +588,82 @@ const LEARNING_RESOURCES = {
 
 ---
 
+## 首页 Hero 重设计（第八次扩展 — 2026-08-08）
+
+### 概述
+
+重新设计首页 Hero 区域，移除每日一句卡片和技术栈区块，采用居中双栏布局（左文字 + 右 3D 倾斜头像），使首页更简洁聚焦。
+
+### 布局结构
+
+```
+┌──────────────────────────────────────────────┐
+│                页面全宽                        │
+│     ┌─────────────────────────────┐          │
+│     │      内容区（50% 宽度）       │          │
+│     │                             │          │
+│     │  Hi, I'm Standby-Time       │          │
+│     │  A learner|       ┌────────┐│          │
+│     │  (打字机循环)      │  头像   ││          │
+│     │                   │ (3D倾斜) ││          │
+│     │                   └────────┘│          │
+│     └─────────────────────────────┘          │
+└──────────────────────────────────────────────┘
+```
+
+- 内容区 `max-width: 50%`，`margin: 0 auto` 居中
+- 内部 flex 双栏：左侧文字左对齐 + 右侧头像
+- 第一行："Hi, I'm Standby-Time"（静态，Arial bold，名字 800 字重）
+- 第二行：打字机循环 "A learner" / "An explorer"（Comic Sans MS）
+
+### 字体与颜色
+
+| 元素 | 字体 | 深色主题 | 浅色主题 |
+|------|------|---------|---------|
+| "Hi, I'm" | Arial, sans-serif, bold | #d4d4d4 | #333333 |
+| "Standby-Time" | Arial, sans-serif, 800 | #e0e0e0 | #1a1a1a |
+| 打字机角色 | Comic Sans MS, cursive | #888888 | #777777 |
+| 光标 `|` | 继承 | --color-accent | --color-accent |
+
+### 打字机循环
+
+状态机：`typing(60ms/字) → holding(1.6s) → deleting(35ms/字) → gap(0.4s) → 下一个角色`
+
+- 递归 `setTimeout` 实现，与项目既有模式一致
+- 光标通过 `::after` 伪元素 + `hero-caret` 动画实现，不被 JS textContent 覆盖
+
+### 3D 倾斜交互
+
+- 鼠标在 Hero 区移动 → 头像 `rotateX/rotateY` 跟随，动态阴影反向偏移，高光跟随
+- JS 写入 CSS 变量 `--tilt-x` / `--tilt-y` 到 `.home-hero__visual` 包装层
+- `perspective(600px)` + 最大 ±12deg 倾斜
+- 跟踪中 `transition: 0.12s linear`，离开后 `0.6s cubic-bezier` 平滑回正
+- 触屏设备（`hover: none`）和 `prefers-reduced-motion` 跳过倾斜
+
+### 移除内容
+
+- 每日一句卡片（第六次扩展数据：`DAILY_QUOTES`、`getDailyQuote()`、`_animateDailyQuote()`、`.daily-quote-card*`、三极行楷 `@font-face`）
+- 技术栈区块（`ABOUT_DATA.skills`、`ABOUT_DATA.title`、`.skill-tags*`）
+- 旧 Hero 布局样式（`.home-hero` 等全部重写）
+
+### 涉及修改的文件
+
+| 文件 | 修改点 |
+|------|--------|
+| `js/data.js` | 删 `DAILY_QUOTES`/`getDailyQuote()`/`ABOUT_DATA.skills`/`ABOUT_DATA.title`；新增 `HERO_ROLES` |
+| `js/render-content.js` | 重写 `_renderAbout()`；删 `_animateDailyQuote()`；新增 `_animateHeroRoles()`/`_bindHeroTilt()`/`_cleanupHomeHero()`/`_handleAvatarError()` |
+| `css/pages.css` | 删旧 Hero/每日一句/技术栈样式；新增居中 Hero/打字机光标/3D 倾斜/响应式样式 |
+| `index.html` | 无需改动 |
+
+### 边界处理
+
+- 头像加载失败 → `error` 事件降级显示名字首字母
+- 路由切换 → `_cleanupHomeHero()` 清理定时器 + 事件监听
+- `HERO_ROLES` 为空 → 打字机安全返回，行保持空白
+- 窄屏（≤768px）→ 单列布局（文字上、头像下）
+
+---
+
 ## 设计系统
 
 ### 配色方案
@@ -717,7 +793,7 @@ const LEARNING_RESOURCES = {
 
 ### 主页面板块
 
-1. **首页**：头像、简介、每日一句、技能标签
+1. **首页**：Hero 区（问候 + 打字机角色循环 + 3D 倾斜头像），居中双栏布局
 2. **学习心得（博客）**：文章列表，按时间排列，支持分类/标签
 3. **项目展示**：项目卡片（名称、描述、技术栈、GitHub/演示链接），点击卡片进入项目详情页；与 GitHub 独立仓库关联
 4. **学习资源**：分类整理的在线学习资料，包括教程网站、机器学习资源、计算机系统经典课程等，以链接卡片形式展示

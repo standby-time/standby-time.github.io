@@ -23,28 +23,8 @@ const NAV_SECTIONS = [
 /* ---------- 首页（个人介绍）数据 ---------- */
 const ABOUT_DATA = {
   name: "Standby-Time",
-  title: "物联网工程专业学生 | C/C++ 开发者 | 持续学习者",
   avatar: "assets/images/avatar.jpg",
   bio: "热爱编程与开源，专注于计算机科学基础知识的学习与工程实践。\n喜欢用代码解决实际问题，热衷于探索新技术并分享学习心得。",
-  skills: [
-    { group: "编程语言", items: [
-      { name: "C/C++" },
-      { name: "Python" },
-      { name: "JavaScript" },
-      { name: "Java" },
-    ]},
-    { group: "前端技术", items: [
-      { name: "HTML/CSS" },
-      { name: "React" },
-      { name: "Vue" },
-    ]},
-    { group: "工具与平台", items: [
-      { name: "Git/GitHub" },
-      { name: "VS Code" },
-      { name: "Linux" },
-      { name: "Docker" },
-    ]},
-  ],
   education: {
     school: "北京工业大学",
     major: "物联网工程",
@@ -720,41 +700,6 @@ const SIDEBAR_CONFIG = {
   },
 };
 
-/* ---------- 每日一句数据 ---------- */
-const DAILY_QUOTES = [
-  { text: "任何足够先进的技术，都与魔法无异。", author: "Arthur C. Clarke" },
-  { text: "代码胜于雄辩。", author: "Linus Torvalds" },
-  { text: "第一要务是让程序跑起来，然后再谈优化。", author: "Michael A. Jackson" },
-  { text: "编程不是打字，是思考。", author: "Rich Hickey" },
-  { text: "优秀程序员的代码，是写给人看的，顺带能在机器上运行。", author: "Harold Abelson" },
-  { text: "简单是可靠的前提。", author: "Edsger W. Dijkstra" },
-  { text: "你不需要理解所有东西才能开始，但一旦开始了，就去理解所有东西。", author: "Standby-Time" },
-  { text: "计算机科学，归根结底是解决问题的艺术。", author: "Donald Knuth" },
-  { text: "写代码最好的方式，就是不要写多余的代码。", author: "Standby-Time" },
-  { text: "技术会过时，但基础原理不会。", author: "Standby-Time" },
-  { text: "学习一门新技术的最好方法，就是用它能做点什么出来。", author: "Standby-Time" },
-  { text: "Bug 是程序在告诉你：你以为你懂了，其实还没有。", author: "Standby-Time" },
-  { text: "任何傻瓜都能写出计算机能懂的代码，好程序员写出人能懂的代码。", author: "Martin Fowler" },
-  { text: "不要害怕犯错，害怕的是不从错误中学习。", author: "Standby-Time" },
-  { text: "将复杂问题拆解成简单步骤，这是程序员最核心的能力。", author: "Standby-Time" },
-  { text: "读代码的时间远多于写代码的时间，让前者更容易。", author: "Guido van Rossum" },
-  { text: "编程是一项将想法变为现实的超能力。", author: "Standby-Time" },
-  { text: "好的命名胜过好的注释。", author: "Standby-Time" },
-  { text: "理解计算机系统，是成为优秀工程师的必经之路。", author: "Randal E. Bryant" },
-  { text: "今天的努力，是明天的基石。", author: "Standby-Time" },
-];
-
-/**
- * 根据日期获取每日一句（日期相同返回同一句，保证同一天不换）
- * @returns {{ text: string, author: string, index: number }}
- */
-function getDailyQuote() {
-  const today = new Date();
-  const dateKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-  let hash = 0;
-  for (let i = 0; i < dateKey.length; i++) {
-    hash = (hash * 31 + dateKey.charCodeAt(i)) >>> 0;
-  }
-  const index = hash % DAILY_QUOTES.length;
-  return { ...DAILY_QUOTES[index], index };
-}
+/* ---------- 首页 Hero 打字机角色文案 ---------- */
+/* 打字机动画循环展示的角色描述（逐字符打出 → 停留 → 删除 → 下一个） */
+const HERO_ROLES = ["A learner", "An explorer"];

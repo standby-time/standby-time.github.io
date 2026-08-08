@@ -24,6 +24,9 @@ const ContentRenderer = {
       CPracticeRenderer.destroy();
     }
 
+    /* 离开首页时清理 Hero 资源（打字机定时器 + 3D 倾斜监听） */
+    this._cleanupHomeHero();
+
     /* 重置筛选状态 */
     this.currentBlogFilter = "all";
     this.currentProjectFilter = "all";
@@ -75,63 +78,42 @@ const ContentRenderer = {
    * ================================================================ */
 
   /**
-   * 渲染首页
+   * 渲染首页（Hero 区：问候 + 打字机角色 + 3D 倾斜头像）
    * @param {HTMLElement} container - 内容区容器
    */
   _renderAbout(container) {
     const data = ABOUT_DATA;
 
-    let html = `
-      <!-- Hero 区：头像 + 一句话介绍 + 简介 -->
+    const html = `
       <section class="content__section" id="section-profile">
-        <div class="home-hero">
-          <div class="home-hero__avatar">
-            ${data.avatar
-              ? `<img src="${data.avatar}" alt="头像">`
-              : data.name.charAt(0).toUpperCase()}
+        <div class="home-hero" id="homeHero">
+          <div class="home-hero__text">
+            <h1 class="home-hero__greeting">Hi, I'm <span class="home-hero__name">${this._escape(data.name)}</span></h1>
+            <p class="home-hero__role" id="heroRoleText"></p>
           </div>
-          <div class="home-hero__info">
-            <h1 class="home-hero__name">${this._escape(data.name)}</h1>
-            <p class="home-hero__tagline">${this._escape(data.title)}</p>
-            <p class="home-hero__bio">${this._escape(data.bio).replace(/\n/g, "<br>")}</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- 每日一句卡片 -->
-      <section class="content__section" id="section-daily-quote">
-        <div class="daily-quote-card" id="dailyQuoteCard">
-          <div class="daily-quote-card__icon">"</div>
-          <div class="daily-quote-card__body">
-            <p class="daily-quote-card__text" id="dailyQuoteText"></p>
-            <p class="daily-quote-card__author" id="dailyQuoteAuthor"></p>
+          <div class="home-hero__visual" id="heroAvatarVisual">
+            <div class="home-hero__avatar" id="heroAvatar">
+              ${data.avatar
+                ? `<img src="${this._escape(data.avatar)}" alt="${this._escape(data.name)} 的头像" decoding="async">`
+                : `<span class="home-hero__avatar-initial" aria-hidden="true">${this._escape(data.name.charAt(0).toUpperCase())}</span>`}
+            </div>
+            <div class="home-hero__avatar-shadow" aria-hidden="true"></div>
           </div>
         </div>
       </section>
-
-      <!-- 技术栈 -->
-      <section class="content__section" id="section-skills">
-        <h2 class="content__section-title">技术栈</h2>
     `;
-
-    /* 技能分组：只显示名称标签 */
-    data.skills.forEach(group => {
-      html += `
-        <div class="skill-tags-group">
-          <h3 class="skill-tags-group__title">${this._escape(group.group)}</h3>
-          <div class="skill-tags">
-            ${group.items.map(s => `<span class="skill-tag">${this._escape(s.name)}</span>`).join("")}
-          </div>
-        </div>
-      `;
-    });
-
-    html += `</section>`;
 
     container.innerHTML = html;
 
-    /* 启动每日一句打字机动画 */
-    this._animateDailyQuote(container);
+    /* 头像加载失败降级：显示名字首字母 */
+    const avatarImg = container.querySelector("#heroAvatar img");
+    if (avatarImg) {
+      avatarImg.addEventListener("error", () => this._handleAvatarError(container, data.name), { once: true });
+    }
+
+    /* 启动角色打字机循环 + 3D 倾斜 */
+    this._animateHeroRoles(container);
+    this._bindHeroTilt(container);
   },
 
   /* ================================================================
@@ -643,49 +625,119 @@ const ContentRenderer = {
    * 工具函数
    * ================================================================ */
 
+  /* ---------- 打字机速度常量 ---------- */
+  _HERO_TYPE_SPEED: 60,
+  _HERO_DELETE_SPEED: 35,
+  _HERO_HOLD_MS: 1600,
+  _HERO_GAP_MS: 400,
+
   /**
-   * 每日一句打字机动画
-   * @param {HTMLElement} container
+   * 角色循环打字机：typing → holding → deleting → gap → 下一个角色，无限循环
+   * @param {HTMLElement} container - 内容区容器
    */
-  _animateDailyQuote(container) {
-    const textEl = container.querySelector("#dailyQuoteText");
-    const authorEl = container.querySelector("#dailyQuoteAuthor");
-    const cardEl = container.querySelector("#dailyQuoteCard");
-    if (!textEl || !authorEl) return;
+  _animateHeroRoles(container) {
+    const roleEl = container.querySelector("#heroRoleText");
+    if (!roleEl || typeof HERO_ROLES === "undefined" || HERO_ROLES.length === 0) return;
 
-    const quote = getDailyQuote();
-    const fullText = quote.text;
-    const author = `—— ${quote.author}`;
-    const speed = 60; // ms/char
-    let idx = 0;
+    let roleIndex = 0;
+    let charIndex = 0;
+    const self = this;
 
-    /* 根据句子长度动态调字号：≤6字 → 2.2rem，每多1字减0.04rem，下限1.1rem */
-    const len = fullText.length;
-    const fontSize = Math.max(1.1, Math.min(2.2, 2.2 - (len - 6) * 0.04));
-    textEl.style.fontSize = `${fontSize}rem`;
+    function tick(phase) {
+      const role = HERO_ROLES[roleIndex];
 
-    /* 短句（≤10字）居中展示 */
-    if (len <= 10 && cardEl) {
-      cardEl.classList.add("daily-quote-card--center");
-    }
-
-    /* 文字区域显示闪烁光标 */
-    textEl.classList.add("daily-quote-card__text--typing");
-
-    function typeChar() {
-      if (idx < fullText.length) {
-        textEl.textContent += fullText[idx];
-        idx++;
-        setTimeout(typeChar, speed);
-      } else {
-        /* 打完文字，移除光标，显示作者 */
-        textEl.classList.remove("daily-quote-card__text--typing");
-        authorEl.textContent = author;
-        authorEl.classList.add("daily-quote-card__author--visible");
+      if (phase === "typing") {
+        if (charIndex < role.length) {
+          roleEl.textContent = role.slice(0, charIndex + 1);
+          charIndex++;
+          self._heroTimer = setTimeout(() => tick("typing"), self._HERO_TYPE_SPEED);
+        } else {
+          self._heroTimer = setTimeout(() => tick("holding"), self._HERO_HOLD_MS);
+        }
+      } else if (phase === "holding") {
+        self._heroTimer = setTimeout(() => tick("deleting"), self._HERO_DELETE_SPEED);
+      } else if (phase === "deleting") {
+        if (charIndex > 0) {
+          charIndex--;
+          roleEl.textContent = role.slice(0, charIndex);
+          self._heroTimer = setTimeout(() => tick("deleting"), self._HERO_DELETE_SPEED);
+        } else {
+          self._heroTimer = setTimeout(() => tick("gap"), self._HERO_GAP_MS);
+        }
+      } else if (phase === "gap") {
+        roleIndex = (roleIndex + 1) % HERO_ROLES.length;
+        self._heroTimer = setTimeout(() => tick("typing"), self._HERO_TYPE_SPEED);
       }
     }
 
-    typeChar();
+    this._heroTimer = setTimeout(() => tick("typing"), this._HERO_TYPE_SPEED);
+  },
+
+  /**
+   * 3D 倾斜：鼠标在 Hero 区内移动时头像跟随旋转
+   * @param {HTMLElement} container - 内容区容器
+   */
+  _bindHeroTilt(container) {
+    const heroEl = container.querySelector("#homeHero");
+    const visualEl = container.querySelector("#heroAvatarVisual");
+    const avatarEl = container.querySelector("#heroAvatar");
+    if (!heroEl || !visualEl || !avatarEl) return;
+
+    /* 触屏设备或用户偏好减弱动效：不启用倾斜 */
+    if (window.matchMedia("(hover: none)").matches ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const onMove = (e) => {
+      const rect = avatarEl.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const px = (e.clientX - rect.left) / rect.width - 0.5;
+      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      visualEl.classList.add("home-hero__visual--tracking");
+      visualEl.style.setProperty("--tilt-x", (px * 2).toFixed(3));
+      visualEl.style.setProperty("--tilt-y", (-py * 2).toFixed(3));
+    };
+
+    const onLeave = () => {
+      visualEl.classList.remove("home-hero__visual--tracking");
+      visualEl.style.setProperty("--tilt-x", "0");
+      visualEl.style.setProperty("--tilt-y", "0");
+    };
+
+    heroEl.addEventListener("mousemove", onMove);
+    heroEl.addEventListener("mouseleave", onLeave);
+
+    this._heroEl = heroEl;
+    this._heroMoveHandler = onMove;
+    this._heroLeaveHandler = onLeave;
+  },
+
+  /**
+   * 清理首页 Hero 资源（路由切换时调用）
+   */
+  _cleanupHomeHero() {
+    if (this._heroTimer) {
+      clearTimeout(this._heroTimer);
+      this._heroTimer = null;
+    }
+    if (this._heroEl && this._heroMoveHandler) {
+      this._heroEl.removeEventListener("mousemove", this._heroMoveHandler);
+      this._heroEl.removeEventListener("mouseleave", this._heroLeaveHandler);
+    }
+    this._heroEl = null;
+    this._heroMoveHandler = null;
+    this._heroLeaveHandler = null;
+  },
+
+  /**
+   * 头像加载失败降级：显示名字首字母
+   * @param {HTMLElement} container - 内容区容器
+   * @param {string} name - 用户名
+   */
+  _handleAvatarError(container, name) {
+    const avatarEl = container.querySelector("#heroAvatar");
+    if (!avatarEl) return;
+    avatarEl.dataset.initial = name.charAt(0).toUpperCase();
+    avatarEl.classList.add("home-hero__avatar--fallback");
   },
 
   /**
