@@ -673,7 +673,7 @@ const LEARNING_RESOURCES = {
 ### 卡片设计（2026-08-09 终版）
 
 - 复用 `.card` 基类（边框、圆角 8px、内边距 24px），覆盖背景和阴影
-- `max-width: 50%`，与上方 Hero 区宽度一致，`margin: 0 auto` 居中
+- `max-width: 860px` 居中，确保 53 周格子完整展示无滚动条
 - 卡片背景 = 页面背景（`--color-bg-primary`），非 `--color-bg-card`
 - 外圈阴影：默认 `0 0 14px rgba(0,0,0,0.45)`（深），hover `0 0 6px rgba(0,0,0,0.15)`（浅）
   - 浅色主题：默认 `0 0 14px rgba(0,0,0,0.1)`，hover `0 0 6px rgba(0,0,0,0.04)`

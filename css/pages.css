@@ -253,7 +253,7 @@
 
 /* ---- GitHub 贡献热力图卡片 ---- */
 .github-contributions {
-  max-width: 50%;
+  max-width: 860px;
   margin: 0 auto var(--space-xl);
   /* 覆盖 .card 默认样式：背景与页面一致 + 外层阴影 */
   background-color: var(--color-bg-primary);
