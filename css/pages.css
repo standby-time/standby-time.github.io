@@ -253,7 +253,7 @@
 
 /* ---- GitHub 贡献热力图卡片 ---- */
 .github-contributions {
-  max-width: 780px;
+  max-width: 860px;
   margin: 0 auto var(--space-xl);
   /* 覆盖 .card 默认样式：背景与页面一致 + 外层阴影 */
   background-color: var(--color-bg-primary);
@@ -303,13 +303,15 @@
   flex-direction: column;
   gap: 2px;
   padding-top: 2px;
+  width: 24px;
+  flex-shrink: 0;
 }
 
 .github-contributions__label {
   font-size: 0.65rem;
   color: var(--color-text-secondary);
-  line-height: 10px;
-  height: 10px;
+  line-height: 11px;
+  height: 11px;
 }
 
 .github-contributions__label--hidden {
@@ -333,8 +335,8 @@
 }
 
 .github-contributions__day {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border-radius: 2px;
   flex-shrink: 0;
 }
@@ -343,7 +345,7 @@
 .github-contributions__months {
   display: flex;
   gap: 2px;
-  margin-left: calc(var(--space-sm) + 30px);
+  margin-left: calc(var(--space-sm) + 24px);
   margin-bottom: 4px;
   font-size: 0.65rem;
   color: var(--color-text-secondary);
