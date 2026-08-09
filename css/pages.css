@@ -352,7 +352,8 @@
 }
 
 .github-contributions__month {
-  flex-shrink: 0;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 /* 贡献颜色变量 — 深色主题（默认） */

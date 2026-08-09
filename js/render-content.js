@@ -827,12 +827,7 @@ const ContentRenderer = {
       const span = (i + 1 < monthStarts.length ? monthStarts[i + 1].weekIndex : data.weeks.length)
                  - monthStarts[i].weekIndex;
       if (span > 0) {
-        const isLast = (i === monthStarts.length - 1);
-        if (isLast) {
-          monthsHtml += `<span class="github-contributions__month" style="flex:1;min-width:${span * 14}px;">${MONTH_NAMES[monthStarts[i].month]}</span>`;
-        } else {
-          monthsHtml += `<span class="github-contributions__month" style="width:${span * 14}px;">${MONTH_NAMES[monthStarts[i].month]}</span>`;
-        }
+        monthsHtml += `<span class="github-contributions__month" style="flex:${span};">${MONTH_NAMES[monthStarts[i].month]}</span>`;
       }
     }
 
@@ -842,8 +837,8 @@ const ContentRenderer = {
     const html = `
       <section class="github-contributions card" id="section-github-contributions">
         <div class="github-contributions__header">
-          <span class="github-contributions__title">Standby-Time</span>
-          <span class="github-contributions__total">过去一年 <strong style="color:#26a641;font-weight:700;">${data.totalContributions}</strong> 次贡献</span>
+          <span class="github-contributions__title">GitHub</span>
+          <span class="github-contributions__total">Standby-Time过去一年 <strong style="color:#26a641;font-weight:700;">${data.totalContributions}</strong> 次贡献</span>
         </div>
         ${monthsHtml ? `<div class="github-contributions__months" style="width:${gridWidth}px;">${monthsHtml}</div>` : ""}
         <div class="github-contributions__body">
