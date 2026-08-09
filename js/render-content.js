@@ -837,8 +837,21 @@ const ContentRenderer = {
     const html = `
       <section class="github-contributions card" id="section-github-contributions">
         <div class="github-contributions__header">
-          <span class="github-contributions__title">GitHub</span>
-          <span class="github-contributions__total">Standby-Time过去一年 <strong style="color:#26a641;font-weight:700;">${data.totalContributions}</strong> 次贡献</span>
+          <div class="github-contributions__header-left">
+            <span class="github-contributions__title">GitHub</span>
+            <span class="github-contributions__total">Standby-Time 过去一年 <strong style="color:#26a641;font-weight:700;">${data.totalContributions}</strong> 次贡献</span>
+          </div>
+          <div class="github-contributions__legend">
+            <span class="github-contributions__legend-label">少</span>
+            <div class="github-contributions__legend-squares">
+              <div class="github-contributions__day" data-level="0"></div>
+              <div class="github-contributions__day" data-level="1"></div>
+              <div class="github-contributions__day" data-level="2"></div>
+              <div class="github-contributions__day" data-level="3"></div>
+              <div class="github-contributions__day" data-level="4"></div>
+            </div>
+            <span class="github-contributions__legend-label">多</span>
+          </div>
         </div>
         ${monthsHtml ? `<div class="github-contributions__months" style="width:${gridWidth}px;">${monthsHtml}</div>` : ""}
         <div class="github-contributions__body">
@@ -850,17 +863,6 @@ const ContentRenderer = {
               ${gridHtml}
             </div>
           </div>
-        </div>
-        <div class="github-contributions__legend">
-          <span class="github-contributions__legend-label">少</span>
-          <div class="github-contributions__legend-squares">
-            <div class="github-contributions__day" data-level="0"></div>
-            <div class="github-contributions__day" data-level="1"></div>
-            <div class="github-contributions__day" data-level="2"></div>
-            <div class="github-contributions__day" data-level="3"></div>
-            <div class="github-contributions__day" data-level="4"></div>
-          </div>
-          <span class="github-contributions__legend-label">多</span>
         </div>
       </section>
     `;

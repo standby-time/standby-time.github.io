@@ -280,6 +280,12 @@
   margin-bottom: var(--space-sm);
 }
 
+.github-contributions__header-left {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
 .github-contributions__title {
   font-size: 1rem;
   font-weight: 600;
@@ -395,9 +401,7 @@
 .github-contributions__legend {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: var(--space-xs);
-  margin-top: var(--space-sm);
 }
 
 .github-contributions__legend-label {
