@@ -792,7 +792,7 @@ const ContentRenderer = {
     function getLevel(color) {
       const MAP = {
         "#161b22": 0, "#ebedf0": 0,
-        "#0e4429": 1, "#9be9a8": 1,
+        "#0e4429": 1, "#9be9a8": 1, "#aceebb": 1,
         "#006d32": 2, "#40c463": 2,
         "#26a641": 3, "#30a14e": 3,
         "#39d353": 4, "#216e39": 4,
@@ -811,7 +811,7 @@ const ContentRenderer = {
       gridHtml += "</div>";
     });
 
-    /* 生成月份标签：计算每月跨周数，14px/周（12px 格子 + 2px 间距） */
+    /* 生成月份标签：14px/周（12px 格子 + 2px 间距），末月拉伸至网格右边界 */
     const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthStarts = []; /* { month, weekIndex } */
     data.weeks.forEach((week, wi) => {
@@ -821,12 +821,18 @@ const ContentRenderer = {
         monthStarts.push({ month: m, weekIndex: wi });
       }
     });
+    const gridWidth = data.weeks.length * 14 - 2; /* 14px/周，减去末尾 gap */
     let monthsHtml = "";
     for (let i = 0; i < monthStarts.length; i++) {
       const span = (i + 1 < monthStarts.length ? monthStarts[i + 1].weekIndex : data.weeks.length)
                  - monthStarts[i].weekIndex;
       if (span > 0) {
-        monthsHtml += `<span class="github-contributions__month" style="width:${span * 14}px;">${MONTH_NAMES[monthStarts[i].month]}</span>`;
+        const isLast = (i === monthStarts.length - 1);
+        if (isLast) {
+          monthsHtml += `<span class="github-contributions__month" style="flex:1;min-width:${span * 14}px;">${MONTH_NAMES[monthStarts[i].month]}</span>`;
+        } else {
+          monthsHtml += `<span class="github-contributions__month" style="width:${span * 14}px;">${MONTH_NAMES[monthStarts[i].month]}</span>`;
+        }
       }
     }
 
@@ -836,10 +842,10 @@ const ContentRenderer = {
     const html = `
       <section class="github-contributions card" id="section-github-contributions">
         <div class="github-contributions__header">
-          <span class="github-contributions__title">GitHub</span>
-          <span class="github-contributions__total">${data.totalContributions} contributions in the last year</span>
+          <span class="github-contributions__title">Standby-Time</span>
+          <span class="github-contributions__total">过去一年 <strong style="color:#26a641;font-weight:700;">${data.totalContributions}</strong> 次贡献</span>
         </div>
-        ${monthsHtml ? `<div class="github-contributions__months">${monthsHtml}</div>` : ""}
+        ${monthsHtml ? `<div class="github-contributions__months" style="width:${gridWidth}px;">${monthsHtml}</div>` : ""}
         <div class="github-contributions__body">
           <div class="github-contributions__labels">
             ${DAY_LABELS.map(l => `<span class="github-contributions__label${l ? "" : " github-contributions__label--hidden"}">${l}</span>`).join("")}
@@ -851,15 +857,15 @@ const ContentRenderer = {
           </div>
         </div>
         <div class="github-contributions__legend">
-          <span class="github-contributions__legend-label">Less</span>
+          <span class="github-contributions__legend-label">少</span>
           <div class="github-contributions__legend-squares">
-            <div class="github-contributions__day" data-level="0" style="background-color:#ebedf0"></div>
-            <div class="github-contributions__day" data-level="1" style="background-color:#9be9a8"></div>
-            <div class="github-contributions__day" data-level="2" style="background-color:#40c463"></div>
-            <div class="github-contributions__day" data-level="3" style="background-color:#30a14e"></div>
-            <div class="github-contributions__day" data-level="4" style="background-color:#216e39"></div>
+            <div class="github-contributions__day" data-level="0"></div>
+            <div class="github-contributions__day" data-level="1"></div>
+            <div class="github-contributions__day" data-level="2"></div>
+            <div class="github-contributions__day" data-level="3"></div>
+            <div class="github-contributions__day" data-level="4"></div>
           </div>
-          <span class="github-contributions__legend-label">More</span>
+          <span class="github-contributions__legend-label">多</span>
         </div>
       </section>
     `;

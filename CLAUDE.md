@@ -673,26 +673,39 @@ const LEARNING_RESOURCES = {
 ### 卡片设计（2026-08-09 终版）
 
 - 复用 `.card` 基类（边框、圆角 8px、内边距 24px），覆盖背景和阴影
-- `max-width: 860px` 居中，确保 53 周格子完整展示无滚动条
+- `max-width: 840px` 居中，确保 53 周格子完整展示无滚动条
 - 卡片背景 = 页面背景（`--color-bg-primary`），非 `--color-bg-card`
 - 外圈阴影：默认 `0 0 14px rgba(0,0,0,0.45)`（深），hover `0 0 6px rgba(0,0,0,0.15)`（浅）
   - 浅色主题：默认 `0 0 14px rgba(0,0,0,0.1)`，hover `0 0 6px rgba(0,0,0,0.04)`
-- 每个格子 12px × 12px，间距 2px（53 周网格 ≈ 740px，填充卡片宽度）
+- 每个格子 12px × 12px，间距 2px，`border: 0.5px solid` 对应等级边框色
 - 桌面端无横向滚动条；移动端（≤768px）`overflow-x: auto` 降级
-- 底部颜色图例：Less / 5 色方块 / More，右对齐
+- 标题：`Standby-Time过去一年 N 次贡献`（数字绿色加粗）
+- 底部颜色图例：`少` / 5 色方块（带边框） / `多`，右对齐
 - `--shadow-card` 统一为 `0 1px 4px`（`variables.css`），后续所有卡片遵循此标准
 
 ### 颜色
 
-- 直接使用 GitHub API 返回的 `color` 字段作为内联背景色，与 GitHub 展示完全一致
-- 同时设置 `data-level` 属性（0-4，基于 API 颜色映射），支持 CSS 变量主题切换
-- 颜色图例使用与 API 一致的浅色主题色值（`#ebedf0` / `#9be9a8` / `#40c463` / `#30a14e` / `#216e39`）
+- 格子直接使用 GitHub API 返回的 `color` 字段作为内联背景色，与 GitHub 展示完全一致
+- 同时设置 `data-level` 属性（0-4，基于 API 颜色映射），CSS 变量提供边框色和降级背景色
+- 浅色主题 level 1 颜色为 `#aceebb`（GitHub 新色值），深色主题为 `#0e4429`
+- 颜色图例方块通过 CSS `data-level` 选择器应用背景色与边框，无内联样式（支持主题切换）
+
+### 贡献颜色变量（`--gh-bg-N` / `--gh-border-N`）
+
+| 等级 | 深色 bg | 深色 border | 浅色 bg | 浅色 border |
+|------|---------|------------|---------|------------|
+| 0 | #161b22 | rgba(240,246,252,0.1) | #ebedf0 | rgba(27,31,35,0.06) |
+| 1 | #0e4429 | rgba(240,246,252,0.1) | #aceebb | rgba(27,31,35,0.06) |
+| 2 | #006d32 | rgba(240,246,252,0.1) | #40c463 | rgba(27,31,35,0.06) |
+| 3 | #26a641 | rgba(240,246,252,0.1) | #30a14e | rgba(27,31,35,0.06) |
+| 4 | #39d353 | rgba(240,246,252,0.1) | #216e39 | rgba(27,31,35,0.06) |
 
 ### 月份标签对齐
 
 - 星期标签列固定 `width: 24px`，`flex-shrink: 0`
-- 月份标签 `margin-left: calc(var(--space-sm) + 24px)` = `32px`，与网格第一列精确对齐
-- 月份标签宽度 = `跨周数 × 14px`（12px 格子 + 2px 间距）
+- 月份标签容器 `width = 网格宽度`（`weeks.length × 14 - 2`），`margin-left: 32px`
+- 前 N−1 个月：`width: 跨周数 × 14px`；最后一个月：`flex: 1; min-width: 跨周数 × 14px`，拉伸至网格右边界
+- 效果：最左月份标签对齐网格左边界，最右月份标签对齐网格右边界
 
 ### 数据流程
 
@@ -717,22 +730,24 @@ render-content.js → 首页渲染
 ### 渲染
 
 - `_appendGitHubContributions(container)` — 动态创建 `<script>` 加载数据文件，onload 调用渲染，onerror 静默跳过
-- `_renderGitHubContributions(container, data)` — 构建 7行×N列网格，含月份标签、周标签、总贡献数、Less/More 颜色图例
-- 每个格子使用 API 返回的 `color` 作为内联 `background-color`，同时通过 `getLevel(color)` 设置 `data-level`
+- `_renderGitHubContributions(container, data)` — 构建 7行×N列网格，含月份标签、周标签、总数统计、"少/多"颜色图例
+- 每个格子使用 API 返回的 `color` 作为内联 `background-color`，同时通过 `getLevel(color)` 设置 `data-level` 控制边框色
+- `getLevel(color)` 映射表覆盖新旧 GitHub 色值（含 `#aceebb` → level 1）
 - 数据文件不存在时静默降级，首页仅显示 Hero
 - 若已加载过（切换页面后回到首页），直接渲染，不重复加载脚本
 
 ### 颜色等级（基于 GitHub API 的 color 字段映射为 level）
 
-| 等级 | API 浅色色值 | API 深色色值 | CSS 深色主题 | CSS 浅色主题 |
-|------|------------|------------|------------|------------|
-| 0 | #ebedf0 | #161b22 | #1e2a3a | #ebedf0 |
-| 1 | #9be9a8 | #0e4429 | #0e4429 | #9be9a8 |
-| 2 | #40c463 | #006d32 | #006d32 | #40c463 |
-| 3 | #30a14e | #26a641 | #26a641 | #30a14e |
-| 4 | #216e39 | #39d353 | #39d353 | #216e39 |
+| 等级 | API 浅色色值 | API 深色色值 |
+|------|------------|------------|
+| 0 | #ebedf0 | #161b22 |
+| 1 | #aceebb / #9be9a8 | #0e4429 |
+| 2 | #40c463 | #006d32 |
+| 3 | #30a14e | #26a641 |
+| 4 | #216e39 | #39d353 |
 
 - 格子内联颜色直接使用 API `color`（即 GitHub 官方渲染色），CSS 变量色用于图例和主题切换降级
+- Level 1 浅色值 `#aceebb` 为 GitHub 新色值，旧值 `#9be9a8` 也在映射表中兼容
 
 ### 涉及修改的文件
 
