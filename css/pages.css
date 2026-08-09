@@ -296,6 +296,7 @@
   font-size: 0.85rem;
   color: var(--color-text-secondary);
   margin-left: 10%;
+  white-space: nowrap;
 }
 
 .github-contributions__body {
