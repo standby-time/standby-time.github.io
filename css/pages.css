@@ -287,7 +287,7 @@
 }
 
 .github-contributions__title {
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: var(--color-text-heading);
 }
@@ -295,6 +295,7 @@
 .github-contributions__total {
   font-size: 0.85rem;
   color: var(--color-text-secondary);
+  margin-left: 5%;
 }
 
 .github-contributions__body {
