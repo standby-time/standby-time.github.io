@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # 每天北京时间 0:00 自动同步贡献数据并部署（UTC+8 → UTC 16:00）
+  schedule:
+    - cron: '7 16 * * *'
   # 允许手动触发部署
   workflow_dispatch:
 
