@@ -566,6 +566,7 @@ const LEARNING_RESOURCES = {
     { name: "MDN Web Docs", url: "https://developer.mozilla.org/zh-CN/", desc: "Mozilla 前端技术权威文档" },
     { name: "Hello 算法", url: "https://www.hello-algo.com", desc: "动画图解数据结构与算法，直观易理解" },
     { name: "CS 自学指南", url: "https://csdiy.wiki", desc: "计算机科学自学路径与资源汇总" },
+    { name: "廖雪峰 Python 教程", url: "https://liaoxuefeng.com/books/python/introduction/index.html", desc: "中文 Python 入门与进阶教程，覆盖基础语法到 Web 开发" },
   ],
   tools: [
     { name: "JSON 在线解析", url: "https://www.json.cn", desc: "JSON 格式化、校验与转换工具" },
