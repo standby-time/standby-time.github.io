@@ -711,6 +711,29 @@ const SIDEBAR_CONFIG = {
   },
 };
 
+/* ---------- 首页时间段问候语 ---------- */
+/* 根据当前小时匹配对应问候语，显示在 GitHub 贡献卡片上方 */
+const GREETINGS = [
+  [0, 5, "夜深了，注意休息 🌙"],
+  [5, 7, "早安，新的一天开始啦 🌅"],
+  [7, 9, "早上好，开始美好的一天 ☀️"],
+  [9, 11, "上午好，保持专注 ✨"],
+  [11, 13, "中午好，该休息一下了 🍲"],
+  [13, 15, "午后时光，继续加油 ☕"],
+  [15, 18, "下午好，别忘了喝水 🌤️"],
+  [18, 20, "傍晚好，放松一下吧 🌆"],
+  [20, 22, "晚上好，享受宁静时光 🌃"],
+  [22, 24, "夜深了，早点休息哦 🌠"],
+];
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  for (const [start, end, msg] of GREETINGS) {
+    if (hour >= start && hour < end) return msg;
+  }
+  return "夜深了，注意休息 🌙"; // 兜底（理论上不会走到）
+}
+
 /* ---------- 首页 Hero 打字机角色文案 ---------- */
 /* 打字机动画循环展示的角色描述（逐字符打出 → 停留 → 删除 → 下一个） */
 const HERO_ROLES = ["A lifelong learner", "A constant explorer"];

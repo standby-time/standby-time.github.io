@@ -116,6 +116,9 @@ const ContentRenderer = {
     this._animateHeroRoles(container);
     this._bindHeroTilt(container);
 
+    /* 时间段问候卡片 */
+    this._renderGreetingCard(container);
+
     /* 加载 GitHub 贡献表格（动态加载数据脚本，不存在时静默跳过） */
     this._appendGitHubContributions(container);
   },
@@ -749,6 +752,20 @@ const ContentRenderer = {
     if (!avatarEl) return;
     avatarEl.dataset.initial = name.charAt(0).toUpperCase();
     avatarEl.classList.add("home-hero__avatar--fallback");
+  },
+
+  /**
+   * 渲染首页时间段问候卡片（位于 Hero 下方、GitHub 贡献表格上方）
+   * 根据当前小时显示对应问候语，卡片样式与 GitHub 贡献卡片一致
+   * @param {HTMLElement} container - 内容区容器
+   */
+  _renderGreetingCard(container) {
+    const msg = typeof getGreeting === "function" ? getGreeting() : "夜深了，注意休息 🌙";
+    const card = document.createElement("section");
+    card.className = "greeting-card card";
+    card.id = "section-greeting";
+    card.innerHTML = `<span class="greeting-card__text">${msg}</span>`;
+    container.appendChild(card);
   },
 
   /**

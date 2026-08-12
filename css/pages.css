@@ -251,6 +251,35 @@
   .home-hero__glow { width: 240px; height: 240px; }
 }
 
+/* ---- 首页时间段问候卡片 ---- */
+.greeting-card {
+  max-width: 840px;
+  margin: 0 auto var(--space-xl);
+  background: var(--color-bg-primary);
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  padding: var(--space-md) var(--space-lg);
+}
+
+.greeting-card:hover {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .greeting-card {
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .greeting-card:hover {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.04);
+}
+
+.greeting-card__text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  letter-spacing: 0.02em;
+}
+
 /* ---- GitHub 贡献热力图卡片 ---- */
 .github-contributions {
   max-width: 840px;
