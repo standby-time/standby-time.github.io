@@ -761,11 +761,10 @@ const ContentRenderer = {
    */
   _renderGreetingCard(container) {
     const msg = typeof getGreeting === "function" ? getGreeting() : "夜深了，注意休息 🌙";
-    const card = document.createElement("section");
-    card.className = "greeting-card card";
-    card.id = "section-greeting";
-    card.innerHTML = `<span class="greeting-card__text">${msg}</span>`;
-    container.appendChild(card);
+    const profileSection = container.querySelector("#section-profile");
+    if (!profileSection) return;
+    const html = `<section class="greeting-card card" id="section-greeting"><span class="greeting-card__text">${msg}</span></section>`;
+    profileSection.insertAdjacentHTML("afterend", html);
   },
 
   /**
@@ -802,8 +801,8 @@ const ContentRenderer = {
   _renderGitHubContributions(container, data) {
     if (!data || !data.weeks || data.weeks.length === 0) return;
 
-    const profileSection = container.querySelector("#section-profile");
-    if (!profileSection) return;
+    const anchor = container.querySelector("#section-greeting") || container.querySelector("#section-profile");
+    if (!anchor) return;
 
     /* 计算贡献等级 0-4，基于 GitHub API 返回的颜色（与 GitHub 完全同步） */
     function getLevel(color) {
@@ -884,7 +883,7 @@ const ContentRenderer = {
       </section>
     `;
 
-    profileSection.insertAdjacentHTML("afterend", html);
+    anchor.insertAdjacentHTML("afterend", html);
   },
 
   /**
