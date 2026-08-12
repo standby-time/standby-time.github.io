@@ -66,6 +66,7 @@
   /* ---- 布局尺寸 ---- */
   --topbar-height: 5vh;               /* 顶部细栏高度 */
   --navbar-height: 44px;               /* 导航栏高度 */
+  --footer-height: 32px;               /* 页脚高度（与内容区底部 padding 对齐，避免遮挡内容） */
   --sidebar-width: 210px;              /* 左侧目录栏宽度 */
   --sidebar-collapsed-width: 0px;      /* 目录栏折叠后宽度 */
 

@@ -766,6 +766,68 @@ render-content.js → 首页渲染
 
 ---
 
+## 首页时间段问候卡片（第十次扩展 — 2026-08-12）
+
+### 概述
+
+在首页 Hero 区下方、GitHub 贡献卡片上方显示一条根据当前时间段变化的问候语卡片，卡片样式与 GitHub 贡献卡片一致（同宽居中、双层阴影、双主题适配）。
+
+### 数据
+
+```js
+const GREETINGS = [
+  [0, 5, "夜深了，注意休息 🌙"],
+  [5, 7, "早安，新的一天开始啦 🌅"],
+  // ... 共 10 个时间段
+];
+function getGreeting() { ... } // 按 new Date().getHours() 匹配
+```
+
+### 渲染顺序（关键约束）
+
+DOM 顺序必须为：Hero（`#section-profile`）→ 问候卡片（`#section-greeting`）→ GitHub 贡献卡片。
+
+实现方式：两个卡片均用 `insertAdjacentHTML("afterend")` 锚定插入：
+- `_renderGreetingCard()` — 插在 `#section-profile` 之后
+- `_renderGitHubContributions()` — 优先插在 `#section-greeting` 之后，找不到则退回 `#section-profile` 之后
+
+**注意**：不能用 `appendChild`，因为 GitHub 数据异步加载，后插入会打乱顺序（曾出现过问候卡片被挤到下方的 bug）。
+
+### 涉及修改的文件
+
+| 文件 | 修改点 |
+|------|--------|
+| `js/data.js` | 新增 `GREETINGS` 数组 + `getGreeting()` 函数 |
+| `js/render-content.js` | 新增 `_renderGreetingCard()`；`_renderGitHubContributions()` 插入锚点改为问候卡片优先 |
+| `css/pages.css` | 新增 `.greeting-card` 样式（对齐 GitHub 贡献卡片阴影方案） |
+
+---
+
+## 页脚（第十一次扩展 — 2026-08-13）
+
+### 概述
+
+主页面底部新增**覆盖式页脚**：左侧版权文字 `© 2026 Standby-Time`（年份由 JS 动态生成），右侧链接图标（GitHub SVG 图标，新标签页打开）。页脚默认隐藏，内容区滚动到底端时才淡入显示。
+
+### 显隐机制（关键约束）
+
+- `.footer` 为 `position: absolute` 覆盖在 `.main-page` 底部（`.main-page` 需 `position: relative`），**不占布局空间**
+- 默认 `opacity: 0; visibility: hidden; pointer-events: none`，滚动到底端时 JS 添加 `.footer--visible` 淡入
+- 监听 `#mainContent` 的 `scroll` 事件：`scrollTop + clientHeight >= scrollHeight - 8` 时显示
+- 路由切换后内容高度变化，用 `hashchange` + `requestAnimationFrame` 在渲染完成后重新判断
+- 高度 `--footer-height: 32px`，与内容区底部 padding（`--space-xl`）对齐，显示时不遮挡内容
+
+### 涉及修改的文件
+
+| 文件 | 修改点 |
+|------|--------|
+| `index.html` | `.main-area` 之后新增 `<footer class="footer">`（版权 + GitHub 图标链接） |
+| `css/layout.css` | 新增 `.footer` / `.footer--visible` 样式；`.main-page` 加 `position: relative`（章节号顺延调整） |
+| `css/variables.css` | 新增 `--footer-height: 32px` |
+| `js/app.js` | `_onReady()` 中动态设置 `#footerYear`；`_bindGlobalEvents()` 中绑定滚动显隐逻辑 |
+
+---
+
 ## 设计系统
 
 ### 配色方案

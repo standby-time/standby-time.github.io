@@ -28,6 +28,12 @@ const App = {
     /* 绑定全局事件 */
     this._bindGlobalEvents();
 
+    /* 页脚版权年份：始终显示当前年份 */
+    const footerYear = document.getElementById("footerYear");
+    if (footerYear) {
+      footerYear.textContent = new Date().getFullYear();
+    }
+
     /* 3. 初始化路由（会触发首次渲染） */
     Router.init();
   },
@@ -70,6 +76,22 @@ const App = {
     const bookmark = document.getElementById("sidebarBookmark");
     if (bookmark) {
       bookmark.addEventListener("click", () => Sidebar.toggle());
+    }
+
+    /* 页脚显隐：内容区滚动到底端时淡入显示，离开底端时隐藏 */
+    const contentEl = document.getElementById("mainContent");
+    const footerEl = document.querySelector(".footer");
+    if (contentEl && footerEl) {
+      const toggleFooter = () => {
+        const atBottom = contentEl.scrollTop + contentEl.clientHeight >= contentEl.scrollHeight - 8;
+        footerEl.classList.toggle("footer--visible", atBottom);
+      };
+
+      contentEl.addEventListener("scroll", toggleFooter, { passive: true });
+      window.addEventListener("resize", toggleFooter);
+      /* 路由切换后内容高度变化，等渲染完成后再判断一次 */
+      window.addEventListener("hashchange", () => requestAnimationFrame(toggleFooter));
+      toggleFooter();
     }
   },
 };
