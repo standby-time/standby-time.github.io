@@ -576,6 +576,7 @@ const LEARNING_RESOURCES = {
     { name: "HelloGitHub", url: "https://hellogithub.com/", desc: "开源项目推荐月刊，发现有趣实用的开源项目" },
     { name: "BeginnersBook", url: "https://beginnersbook.com/", desc: "Java 等编程语言入门教程，英文图示详解" },
     { name: "JavaGuide", url: "https://javaguide.cn/", desc: "Java 学习与面试指南，涵盖系统设计与八股文" },
+    { name: "freeCodeCamp", url: "https://github.com/freeCodeCamp/freeCodeCamp", desc: "开源全栈编程课程，涵盖前端/后端/数据科学等系统学习路径" },
   ],
   tools: [
     { name: "JSON 在线解析", url: "https://www.json.cn", desc: "JSON 格式化、校验与转换工具" },
