@@ -116,6 +116,11 @@ const ContentRenderer = {
     this._animateHeroRoles(container);
     this._bindHeroTilt(container);
 
+    /* 首页网格背景（左上角向中间渐隐 + 鼠标放大变形） */
+    if (typeof GridBackground !== "undefined") {
+      GridBackground.init(container);
+    }
+
     /* 时间段问候卡片 */
     this._renderGreetingCard(container);
 
@@ -740,6 +745,11 @@ const ContentRenderer = {
     this._heroEl = null;
     this._heroMoveHandler = null;
     this._heroLeaveHandler = null;
+
+    /* 清理首页网格背景 */
+    if (typeof GridBackground !== "undefined") {
+      GridBackground.destroy();
+    }
   },
 
   /**

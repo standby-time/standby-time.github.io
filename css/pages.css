@@ -48,6 +48,18 @@
  * 2. 首页（Hero 区：问候 + 打字机角色 + 3D 倾斜头像）
  * ================================================================ */
 
+/* ---- 首页网格背景画布：铺满主区域，位于内容之下 ---- */
+.home-grid-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;                /* 不拦截鼠标事件 */
+  /* 椭圆遮罩渐隐：左上角向其他角方向覆盖 70%（横 70% 宽 / 纵 70% 高），
+     30% 处开始变浅，边界处完全透明 */
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 0% 0%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 70% at 0% 0%, #000 30%, transparent 100%);
+}
+
 /* ---- Hero 容器：两栏居中，内容占 50% 宽度 ---- */
 .home-hero {
   display: flex;

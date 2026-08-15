@@ -828,6 +828,47 @@ DOM 顺序必须为：Hero（`#section-profile`）→ 问候卡片（`#section-g
 
 ---
 
+## 首页网格背景（第十二次扩展 — 2026-08-16）
+
+### 概述
+
+首页内容区背后绘制细网格背景：从页面左上角向中间径向渐隐，鼠标附近网格线产生透镜放大变形（顶点沿远离鼠标方向外推）。
+
+### 渲染原理（Canvas）
+
+- 每帧重绘全部网格线（间距 40px、线宽 1px），顶点按距鼠标距离变形
+- 变形函数：距鼠标 `radius`(110px) 内的顶点外推 `push = strength * radius * t²`（t = 1 - d/radius），最大位移 ~44px，形成放大效果
+- 渐隐遮罩：CSS `mask-image` 椭圆径向渐变（`ellipse 70% 70% at 0% 0%`，stops `#000 30% → transparent 100%`），网格从左上角向其他角方向覆盖 70%（横 70% 宽 / 纵 70% 高），30% 处开始变浅、边界完全透明。由浏览器合成器处理，Canvas 只管画线
+- 鼠标平滑跟踪（每帧 lerp 0.15 + 接近目标时吸附），透镜有拖尾感
+- 鼠标远离且网格已静止时跳过重绘（`staticDrawn` 标记），节省 CPU
+- `prefers-reduced-motion` 时只画静态网格，不启动动画循环
+- 线条颜色跟随主题：CSS 变量 `--grid-line-rgb` / `--grid-line-alpha`，MutationObserver 监听 `data-theme` 变化
+
+### 层叠与布局（关键约束）
+
+- 画布挂在 `.main-area`（非滚动区域），`position: absolute; inset: 0`，**固定不随内容滚动**
+- `.main-area` 承担页面底色 `--color-bg-primary`；`.content` 背景改为 `transparent`（否则不透明背景会盖住画布）
+- 层叠关系：画布 `z-index: 0` < `.content` / `.sidebar` `z-index: 1`（两者加 `position: relative`）
+- 画布 `pointer-events: none`，鼠标跟踪监听 `.main-area` 的 mousemove/mouseleave
+
+### 生命周期
+
+- `_renderAbout()` 渲染首页后调用 `GridBackground.init(container)`
+- `_cleanupHomeHero()` 中调用 `GridBackground.destroy()`（幂等，路由切换离开首页时自动清理）
+
+### 涉及修改的文件
+
+| 文件 | 修改点 |
+|------|--------|
+| `js/grid-background.js` | 新增：Canvas 网格背景模块（GridBackground 对象） |
+| `index.html` | 渲染模块脚本组新增 `grid-background.js` |
+| `js/render-content.js` | `_renderAbout()` 中 init；`_cleanupHomeHero()` 中 destroy |
+| `css/layout.css` | `.main-area` 加 `position: relative` + 承担底色；`.content` 背景透明 + `z-index: 1`；`.sidebar` 加 `z-index: 1` |
+| `css/pages.css` | 新增 `.home-grid-canvas` 样式 |
+| `css/variables.css` | 双主题新增 `--grid-line-rgb` / `--grid-line-alpha` |
+
+---
+
 ## 设计系统
 
 ### 配色方案
@@ -1099,6 +1140,7 @@ my-website/
 │   ├── render-blog.js      # 博客列表/详情渲染
 │   ├── render-projects.js  # 项目展示渲染（含卡片及 GitHub/演示链接）
 │   ├── render-c-practice.js# 刷题展示页渲染（目录 + 内容区 + 滚动联动）
+│   ├── grid-background.js  # 首页网格背景（Canvas 绘制 + 鼠标透镜放大）
 │   ├── data.js             # 静态数据（博客、项目、个人信息等）
 │   └── data-c-practice.js  # 题目数据（sync-c-practice.js 自动生成，不手动编辑）
 └── assets/

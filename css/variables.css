@@ -42,6 +42,10 @@
   --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.2);
   --shadow-topbar: 0 1px 3px rgba(0, 0, 0, 0.4);
 
+  /* ---- 首页网格背景 ---- */
+  --grid-line-rgb: 255, 255, 255;      /* 网格线 RGB（深色主题：白色细线呈浅灰效果） */
+  --grid-line-alpha: 0.28;             /* 网格线透明度 */
+
   /* ---- 字体 ---- */
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-code: "Cascadia Code", "Cascadia Mono", Consolas, "Courier New", monospace;
@@ -113,6 +117,10 @@
   /* ---- 阴影 ---- */
   --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06);
   --shadow-topbar: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  /* ---- 首页网格背景 ---- */
+  --grid-line-rgb: 120, 120, 120;      /* 网格线 RGB（浅色主题：中灰细线） */
+  --grid-line-alpha: 0.2;              /* 网格线透明度 */
 
   /* ---- 滚动条 ---- */
   --scrollbar-thumb: #c4c0bb;
