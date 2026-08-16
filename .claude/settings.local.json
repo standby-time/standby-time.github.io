@@ -6,7 +6,9 @@
       "Bash(node --check js/render-content.js)",
       "Bash(node --check scripts/sync-github-contributions.js)",
       "Bash(node scripts/sync-github-contributions.js standby-time)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "WebSearch",
+      "WebFetch(domain:www.immers.icu)"
     ]
   }
 }

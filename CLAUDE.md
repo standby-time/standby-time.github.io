@@ -439,6 +439,10 @@ c-practice-100-CaiNiao/
 | `cs-systems` | 计算机系统 | CSAPP、CMU 15-213、计算机系统要素等系统级课程 |
 | `tutorials` | 教程网站 | 菜鸟教程、MDN、Hello 算法、CS 自学指南 |
 | `tools` | 开发工具 | JSON 解析、正则测试、Carbon 代码截图、Excalidraw |
+| `daily-tools` | 实用工具 | 腾讯帮小忙、工具 123、MikuTools 等在线工具箱（第十四次扩展新增） |
+| `design` | 设计素材 | 优品 PPT、Pixabay、macOS 图标等素材资源（第十四次扩展新增） |
+| `community` | 技术社区 | SegmentFault、IT 之家、小众技术工具库（第十四次扩展新增） |
+| `learning` | 学习资料 | 英语真题、答案吧、历史时间轴、wikiHow（第十四次扩展新增） |
 
 ### 机器学习资源
 
@@ -474,10 +478,54 @@ const LEARNING_RESOURCES = {
   tools: [
     { name: '', url: '', desc: '' },
   ],
+  'daily-tools': [ /* 实用工具 */ ],
+  design: [ /* 设计素材 */ ],
+  community: [ /* 技术社区 */ ],
+  learning: [ /* 学习资料 */ ],
 };
 ```
 
-数据变量名从 `TOOLBOX_DATA` 改为 `LEARNING_RESOURCES`，结构从 `{ tools, websites, ebooks }` 改为 `{ ml, 'cs-systems', tutorials, tools }`。
+数据变量名从 `TOOLBOX_DATA` 改为 `LEARNING_RESOURCES`，结构从 `{ tools, websites, ebooks }` 改为 `{ ml, 'cs-systems', tutorials, tools }`，第十四次扩展新增 `'daily-tools'` / `design` / `community` / `learning` 四个分类。
+
+### 新增资源（第十四次扩展 — 2026-08-17）
+
+**开发工具**（`tools` 追加）：Tools.Fun（开发者工具箱）、NameBeta（域名查询取名）、Twikoo（博客评论系统）。
+
+**实用工具**（`daily-tools`）：
+
+| 名称 | 链接 | 说明 |
+|------|------|------|
+| 腾讯帮小忙工具箱 | `https://tool.browser.qq.com/` | 腾讯官方在线工具箱，图片/PDF/文档/开发工具 |
+| 工具 123 | `http://www.gjw123.com/` | 在线工具导航聚合站，上千个免安装小工具 |
+| MikuTools | `https://tools.miku.ac/` | 轻量在线工具集合 |
+| 打字打字 | `https://dazidazi.com/` | 在线打字练习，指法纠正与闯关 |
+| ParseVideo 视频下载 | `https://pv.vlogdownloader.com/` | 在线视频解析下载，支持多平台 |
+
+**设计素材**（`design`）：
+
+| 名称 | 链接 | 说明 |
+|------|------|------|
+| 优品 PPT | `https://www.ypppt.com/` | 免费 PPT 模板下载 |
+| Pixabay | `https://pixabay.com/zh/` | 免费商用图片、插画与视频素材 |
+| macOS Icons | `https://macosicons.com/zh#/` | macOS 风格应用图标 |
+| 相机水印生成器 | `https://www.immers.icu/` | 徕卡、哈苏等品牌相机水印模板 |
+
+**技术社区**（`community`）：
+
+| 名称 | 链接 | 说明 |
+|------|------|------|
+| SegmentFault 思否 | `https://segmentfault.com/` | 中文技术问答社区 |
+| IT 之家 | `https://www.ithome.com/` | 科技资讯媒体 |
+| 小众技术工具库 | `https://www.xiaozhongjishu.com/sites/113.html` | 实用软件与精品网站导航 |
+
+**学习资料**（`learning`）：
+
+| 名称 | 链接 | 说明 |
+|------|------|------|
+| 英语真题在线 | `https://zhenti.burningvocabulary.cn/` | 考研、四六级、专四专八历年真题 |
+| 答案吧 | `http://www.daanbar.com/index.html` | 大学课后习题答案与解析 |
+| 中国历史时间轴 | `https://www.lishiju.net/timeline.html` | 朝代更迭可视化时间线 |
+| wikiHow 中文 | `https://zh.wikihow.com/` | 生活百科指南 |
 
 ### 渲染页面
 
@@ -866,6 +914,43 @@ DOM 顺序必须为：Hero（`#section-profile`）→ 问候卡片（`#section-g
 | `css/layout.css` | `.main-area` 加 `position: relative` + 承担底色；`.content` 背景透明 + `z-index: 1`；`.sidebar` 加 `z-index: 1` |
 | `css/pages.css` | 新增 `.home-grid-canvas` 样式 |
 | `css/variables.css` | 双主题新增 `--grid-line-rgb` / `--grid-line-alpha` |
+
+---
+
+## 卡片阴影统一（第十三次扩展 — 2026-08-16）
+
+### 概述
+
+统一全站卡片的阴影与悬浮效果：移除卡片外边框（深色主题下近黑色），默认状态卡片周围有较深外层阴影，鼠标悬浮时阴影变浅变小并上浮 2px，形成「卡片浮起」的视觉效果。此方案取代第九次扩展中 `--shadow-card`（0 1px 4px）作为卡片阴影的标准。
+
+### 设计令牌
+
+`css/variables.css` 新增两个变量（双主题定义）：
+
+| 变量 | 深色主题 | 浅色主题 | 用途 |
+|------|---------|---------|------|
+| `--shadow-card-outer` | `0 0 14px rgba(0,0,0,0.45)` | `0 0 14px rgba(0,0,0,0.1)` | 卡片默认外层阴影（深、范围大） |
+| `--shadow-card-outer-hover` | `0 0 6px rgba(0,0,0,0.15)` | `0 0 6px rgba(0,0,0,0.04)` | 卡片悬浮阴影（浅而小） |
+
+`--shadow-card`（0 1px 4px）保留，仅用于头像等非卡片元素。
+
+### 统一规则
+
+所有卡片类（`.card`、`.blog-item`、`.project-card`、`.toolbox-card`、`.education-card`、`.greeting-card`、`.github-contributions`）：
+
+- 移除 `border: 1px solid var(--color-border)`，卡片边界完全由阴影勾勒
+- 默认 `box-shadow: var(--shadow-card-outer)` — 阴影深、范围大，卡片有贴地感
+- hover：`box-shadow: var(--shadow-card-outer-hover)` + `transform: translateY(-2px)` — 阴影浅而小、卡片上浮，模拟浮起效果
+- 过渡：`box-shadow var(--transition-normal), transform var(--transition-normal)`
+- 问候卡片和 GitHub 贡献卡片原先硬编码的阴影值及 `[data-theme="light"]` 覆盖块删除，改用统一变量
+
+### 涉及修改的文件
+
+| 文件 | 修改点 |
+|------|--------|
+| `css/variables.css` | 双主题新增 `--shadow-card-outer` / `--shadow-card-outer-hover` |
+| `css/components.css` | `.card` / `.blog-item` / `.project-card` / `.toolbox-card` 移除边框、改用外层阴影 + hover 悬浮 |
+| `css/pages.css` | `.education-card` 同上；`.greeting-card` / `.github-contributions` 硬编码阴影改用统一变量 |
 
 ---
 

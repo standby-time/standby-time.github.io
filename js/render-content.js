@@ -491,13 +491,17 @@ const ContentRenderer = {
       { key: "cs-systems",  id: "section-res-cs-systems",  title: "计算机系统" },
       { key: "tutorials",   id: "section-res-tutorials",   title: "教程网站" },
       { key: "tools",       id: "section-res-tools",       title: "开发工具" },
+      { key: "daily-tools", id: "section-res-daily-tools", title: "实用工具" },
+      { key: "design",      id: "section-res-design",      title: "设计素材" },
+      { key: "community",   id: "section-res-community",   title: "技术社区" },
+      { key: "learning",    id: "section-res-learning",    title: "学习资料" },
     ];
 
     let html = `
       <div class="content__section">
         <h2 class="content__section-title">学习资源</h2>
         <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: var(--space-lg);">
-          计算机专业学习资料与在线资源分类整理，包含机器学习、计算机系统、教程网站和开发工具
+          计算机专业学习资料与在线资源分类整理，涵盖教程网站、开发工具、实用工具、设计素材、技术社区与学习资料
         </p>
     `;
 

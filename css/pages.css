@@ -268,21 +268,15 @@
   max-width: 840px;
   margin: 0 auto var(--space-xl);
   background: var(--color-bg-primary);
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow-card-outer);
   text-align: center;
   padding: var(--space-md) var(--space-lg);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
 }
 
 .greeting-card:hover {
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
-}
-
-[data-theme="light"] .greeting-card {
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="light"] .greeting-card:hover {
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-card-outer-hover);
+  transform: translateY(-2px);
 }
 
 .greeting-card__text {
@@ -298,20 +292,13 @@
   margin: 0 auto var(--space-xl);
   /* 覆盖 .card 默认样式：背景与页面一致 + 外层阴影 */
   background-color: var(--color-bg-primary);
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.45);
-  transition: box-shadow 0.3s ease, border-color var(--transition-fast);
+  box-shadow: var(--shadow-card-outer);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
 }
 
 .github-contributions:hover {
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
-}
-
-/* 浅色主题阴影 */
-[data-theme="light"] .github-contributions {
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.1);
-}
-[data-theme="light"] .github-contributions:hover {
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-card-outer-hover);
+  transform: translateY(-2px);
 }
 
 .github-contributions__header {
@@ -473,9 +460,15 @@
 /* ---- 教育背景 ---- */
 .education-card {
   background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
+  box-shadow: var(--shadow-card-outer);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.education-card:hover {
+  box-shadow: var(--shadow-card-outer-hover);
+  transform: translateY(-2px);
 }
 
 .education-card__header {

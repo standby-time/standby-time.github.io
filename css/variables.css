@@ -41,6 +41,8 @@
   /* ---- 阴影 ---- */
   --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.2);
   --shadow-topbar: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-card-outer: 0 0 14px rgba(0, 0, 0, 0.45);      /* 卡片外层阴影（默认，深） */
+  --shadow-card-outer-hover: 0 0 6px rgba(0, 0, 0, 0.15); /* 卡片悬浮阴影（hover，浅而小） */
 
   /* ---- 首页网格背景 ---- */
   --grid-line-rgb: 255, 255, 255;      /* 网格线 RGB（深色主题：白色细线呈浅灰效果） */
@@ -117,6 +119,8 @@
   /* ---- 阴影 ---- */
   --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06);
   --shadow-topbar: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-card-outer: 0 0 14px rgba(0, 0, 0, 0.1);       /* 卡片外层阴影（默认，深） */
+  --shadow-card-outer-hover: 0 0 6px rgba(0, 0, 0, 0.04); /* 卡片悬浮阴影（hover，浅而小） */
 
   /* ---- 首页网格背景 ---- */
   --grid-line-rgb: 120, 120, 120;      /* 网格线 RGB（浅色主题：中灰细线） */
