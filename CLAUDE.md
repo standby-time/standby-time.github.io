@@ -527,6 +527,32 @@ const LEARNING_RESOURCES = {
 | 中国历史时间轴 | `https://www.lishiju.net/timeline.html` | 朝代更迭可视化时间线 |
 | wikiHow 中文 | `https://zh.wikihow.com/` | 生活百科指南 |
 
+### 新增资源（第十五次扩展 — 2026-08-18）
+
+**教程网站**（`tutorials` 追加）：W3School 中文（Web 开发中文教程）、Hexo 文档（静态博客框架官方文档）。
+
+**实用工具**（`daily-tools` 追加）：
+
+| 名称 | 链接 | 说明 |
+|------|------|------|
+| FakeUpdate | `https://fakeupdate.net/` | 模拟系统更新界面的整蛊网站 |
+| 土味情话生成器 | `https://lovelive.tools/` | 随机语录生成 API（域名与 Love Live 无关） |
+| Listen 1 | `https://listen1.github.io/listen1/` | 聚合多平台音乐搜索与播放的开源播放器 |
+| EmojiAll | `https://www.emojiall.com/zh-hans` | Emoji 表情大全与百科 |
+
+**设计素材**（`design` 追加）：WebGradients（渐变配色参考，一键复制 CSS）。
+
+**技术社区**（`community` 追加）：A 姐分享（软件、教程与实用网站资源分享）；「小众技术工具库」条目 URL 由 `sites/113.html` 更新为站点主页。
+
+**学习资料**（`learning` 追加）：
+
+| 名称 | 链接 | 说明 |
+|------|------|------|
+| 宇宙尺度 2 | `https://htwins.net/scale2/` | 从普朗克长度到可观测宇宙的互动缩放科普 |
+| 10 万颗恒星 | `http://stars.chromeexperiments.com/` | 银河系 3D 可视化漫游 |
+
+**去重记录**：MDN Web Docs 与第十四次扩展已有条目 URL 完全一致，未重复添加。
+
 ### 渲染页面
 
 - 页面标题：`学习资源`

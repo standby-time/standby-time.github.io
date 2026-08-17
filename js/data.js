@@ -577,6 +577,8 @@ const LEARNING_RESOURCES = {
     { name: "BeginnersBook", url: "https://beginnersbook.com/", desc: "Java 等编程语言入门教程，英文图示详解" },
     { name: "JavaGuide", url: "https://javaguide.cn/", desc: "Java 学习与面试指南，涵盖系统设计与八股文" },
     { name: "freeCodeCamp", url: "https://github.com/freeCodeCamp/freeCodeCamp", desc: "开源全栈编程课程，涵盖前端/后端/数据科学等系统学习路径" },
+    { name: "W3School 中文", url: "https://www.w3school.com.cn/", desc: "Web 开发技术中文教程，语法速查与在线实例" },
+    { name: "Hexo 文档", url: "https://hexo.io/zh-cn/", desc: "Hexo 静态博客框架官方文档（中文）" },
   ],
   tools: [
     { name: "JSON 在线解析", url: "https://www.json.cn", desc: "JSON 格式化、校验与转换工具" },
@@ -594,23 +596,31 @@ const LEARNING_RESOURCES = {
     { name: "MikuTools", url: "https://tools.miku.ac/", desc: "轻量在线工具集合，涵盖开发、图片、视频等常用工具" },
     { name: "打字打字", url: "https://dazidazi.com/", desc: "在线打字练习，指法纠正、速度测试与闯关训练" },
     { name: "ParseVideo 视频下载", url: "https://pv.vlogdownloader.com/", desc: "在线视频解析下载，支持 B 站、YouTube、抖音等平台" },
+    { name: "FakeUpdate", url: "https://fakeupdate.net/", desc: "模拟 Windows/macOS 系统更新界面的整蛊网站" },
+    { name: "土味情话生成器", url: "https://lovelive.tools/", desc: "随机语录生成 API，渣男/绿茶两种风格" },
+    { name: "Listen 1", url: "https://listen1.github.io/listen1/", desc: "聚合多平台音乐搜索与播放的开源播放器" },
+    { name: "EmojiAll", url: "https://www.emojiall.com/zh-hans", desc: "Emoji 表情大全与百科，含义查询与一键复制" },
   ],
   design: [
     { name: "优品 PPT", url: "https://www.ypppt.com/", desc: "免费 PPT 模板下载网站，涵盖商务、教育等多种风格" },
     { name: "Pixabay", url: "https://pixabay.com/zh/", desc: "免费商用图片、插画与视频素材库" },
     { name: "macOS Icons", url: "https://macosicons.com/zh#/", desc: "macOS 风格应用图标资源，数千款免费图标" },
     { name: "相机水印生成器", url: "https://www.immers.icu/", desc: "徕卡、哈苏等品牌相机水印模板，支持快捷指令一键添加" },
+    { name: "WebGradients", url: "https://webgradients.com/", desc: "免费渐变配色参考，180 种渐变一键复制 CSS" },
   ],
   community: [
     { name: "SegmentFault 思否", url: "https://segmentfault.com/", desc: "中文技术问答社区，覆盖前后端、算法等话题" },
     { name: "IT 之家", url: "https://www.ithome.com/", desc: "科技资讯媒体，IT 行业新闻与数码产品评测" },
-    { name: "小众技术工具库", url: "https://www.xiaozhongjishu.com/sites/113.html", desc: "实用软件与精品网站导航，B 站 UP 主阿众维护" },
+    { name: "小众技术工具库", url: "https://www.xiaozhongjishu.com/", desc: "实用软件与精品网站导航，B 站 UP 主阿众维护" },
+    { name: "A 姐分享", url: "https://www.ahhhhfs.com/", desc: "软件、教程与实用网站资源分享，B 站同步更新" },
   ],
   learning: [
     { name: "英语真题在线", url: "https://zhenti.burningvocabulary.cn/", desc: "考研、四六级、专四专八历年真题在线刷题与下载" },
     { name: "答案吧", url: "http://www.daanbar.com/index.html", desc: "大学课后习题答案与解析，教材配套学习资料" },
     { name: "中国历史时间轴", url: "https://www.lishiju.net/timeline.html", desc: "公元前 2070 年至今的朝代更迭可视化时间线" },
     { name: "wikiHow 中文", url: "https://zh.wikihow.com/", desc: "图文并茂的生活百科指南，解决各类实际问题" },
+    { name: "宇宙尺度 2", url: "https://htwins.net/scale2/", desc: "从普朗克长度到可观测宇宙的互动式缩放科普" },
+    { name: "10 万颗恒星", url: "http://stars.chromeexperiments.com/", desc: "银河系 3D 可视化漫游，Chrome 官方实验项目" },
   ],
 };
 
