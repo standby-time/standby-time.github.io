@@ -579,6 +579,12 @@ const LEARNING_RESOURCES = {
     { name: "freeCodeCamp", url: "https://github.com/freeCodeCamp/freeCodeCamp", desc: "开源全栈编程课程，涵盖前端/后端/数据科学等系统学习路径" },
     { name: "W3School 中文", url: "https://www.w3school.com.cn/", desc: "Web 开发技术中文教程，语法速查与在线实例" },
     { name: "Hexo 文档", url: "https://hexo.io/zh-cn/", desc: "Hexo 静态博客框架官方文档（中文）" },
+    { name: "Jekyll 官网", url: "https://jekyllrb.com/", desc: "Jekyll 静态博客框架官方网站，支持 GitHub Pages 免费托管" },
+    { name: "My-Notes 学习笔记", url: "https://mrjokersince1997.github.io/My-Notes/#/", desc: "个人技术学习笔记站点，系统整理编程与工程化知识点" },
+    { name: "Bootstrap 中文网", url: "https://www.bootcss.com/", desc: "Bootstrap 中文官方文档，快速上手响应式前端框架" },
+    { name: "TypeScript 中文手册", url: "https://typescript.bootcss.com/", desc: "TypeScript 官方手册中文版，从入门到进阶的完整指南" },
+    { name: "Docker 教程（EasyDoc）", url: "https://docker.easydoc.net/doc/81170005/cCewZWoN/lTKfePfP", desc: "Docker 从入门到实践教程，镜像、容器与 Compose 系统讲解" },
+    { name: "Unity 中文官网", url: "https://unity.cn/", desc: "Unity 中国官方站点，游戏引擎下载、教程与学习社区" },
   ],
   tools: [
     { name: "JSON 在线解析", url: "https://www.json.cn", desc: "JSON 格式化、校验与转换工具" },
@@ -589,6 +595,7 @@ const LEARNING_RESOURCES = {
     { name: "Tools.Fun", url: "https://tools.fun/", desc: "开发者在线工具箱，时间戳、JSON、加密等工具本地运行" },
     { name: "NameBeta", url: "https://namebeta.com/zh", desc: "域名注册查询与创意取名，批量检测可用性" },
     { name: "Twikoo", url: "https://twikoo.js.org/", desc: "轻量简洁的博客评论系统，支持自部署与多平台集成" },
+    { name: "GetMan 接口调试", url: "https://getman.cn/", desc: "在线接口调试工具，模拟接口与生成 Mock 数据" },
   ],
   "daily-tools": [
     { name: "腾讯帮小忙工具箱", url: "https://tool.browser.qq.com/", desc: "腾讯官方在线工具箱，图片/PDF/文档/开发工具免费使用" },
@@ -607,12 +614,15 @@ const LEARNING_RESOURCES = {
     { name: "macOS Icons", url: "https://macosicons.com/zh#/", desc: "macOS 风格应用图标资源，数千款免费图标" },
     { name: "相机水印生成器", url: "https://www.immers.icu/", desc: "徕卡、哈苏等品牌相机水印模板，支持快捷指令一键添加" },
     { name: "WebGradients", url: "https://webgradients.com/", desc: "免费渐变配色参考，180 种渐变一键复制 CSS" },
+    { name: "The Noun Project", url: "https://thenounproject.com/", desc: "高质量矢量图标素材库，数百万枚图标可搜索下载" },
+    { name: "中国色", url: "https://zhongguose.com/", desc: "中国传统颜色参考，收录数百种中国传统色值与名称" },
   ],
   community: [
     { name: "SegmentFault 思否", url: "https://segmentfault.com/", desc: "中文技术问答社区，覆盖前后端、算法等话题" },
     { name: "IT 之家", url: "https://www.ithome.com/", desc: "科技资讯媒体，IT 行业新闻与数码产品评测" },
     { name: "小众技术工具库", url: "https://www.xiaozhongjishu.com/", desc: "实用软件与精品网站导航，B 站 UP 主阿众维护" },
     { name: "A 姐分享", url: "https://www.ahhhhfs.com/", desc: "软件、教程与实用网站资源分享，B 站同步更新" },
+    { name: "软仓", url: "https://www.ruancang.net/#/sim?page=0&id=0&q=", desc: "软件资源搜索导航站，收录各类实用软件与下载渠道" },
   ],
   learning: [
     { name: "英语真题在线", url: "https://zhenti.burningvocabulary.cn/", desc: "考研、四六级、专四专八历年真题在线刷题与下载" },

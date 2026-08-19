@@ -8,7 +8,9 @@
       "Bash(node scripts/sync-github-contributions.js standby-time)",
       "Bash(node *)",
       "WebSearch",
-      "WebFetch(domain:www.immers.icu)"
+      "WebFetch(domain:www.immers.icu)",
+      "WebFetch(domain:mrjokersince1997.github.io)",
+      "WebFetch(domain:www.ruancang.net)"
     ]
   }
 }

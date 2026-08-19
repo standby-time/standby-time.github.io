@@ -553,6 +553,25 @@ const LEARNING_RESOURCES = {
 
 **去重记录**：MDN Web Docs 与第十四次扩展已有条目 URL 完全一致，未重复添加。
 
+### 新增资源（第十六次扩展 — 2026-08-19）
+
+**教程网站**（`tutorials` 追加）：
+
+| 名称 | 链接 | 说明 |
+|------|------|------|
+| Jekyll 官网 | `https://jekyllrb.com/` | Jekyll 静态博客框架官网，支持 GitHub Pages 免费托管 |
+| My-Notes 学习笔记 | `https://mrjokersince1997.github.io/My-Notes/#/` | 个人技术学习笔记站点 |
+| Bootstrap 中文网 | `https://www.bootcss.com/` | Bootstrap 中文官方文档 |
+| TypeScript 中文手册 | `https://typescript.bootcss.com/` | TypeScript 官方手册中文版 |
+| Docker 教程（EasyDoc） | `https://docker.easydoc.net/doc/81170005/cCewZWoN/lTKfePfP` | Docker 从入门到实践教程 |
+| Unity 中文官网 | `https://unity.cn/` | Unity 中国官方站点，引擎下载与学习社区 |
+
+**开发工具**（`tools` 追加）：GetMan 接口调试（`https://getman.cn/`，在线接口调试与 Mock 数据生成）。
+
+**设计素材**（`design` 追加）：The Noun Project（`https://thenounproject.com/`，矢量图标素材库）；中国色（`https://zhongguose.com/`，中国传统颜色参考）。
+
+**技术社区**（`community` 追加）：软仓（`https://www.ruancang.net/`，软件资源搜索导航站）。
+
 ### 渲染页面
 
 - 页面标题：`学习资源`
