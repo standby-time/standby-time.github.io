@@ -10,7 +10,12 @@
       "WebSearch",
       "WebFetch(domain:www.immers.icu)",
       "WebFetch(domain:mrjokersince1997.github.io)",
-      "WebFetch(domain:www.ruancang.net)"
+      "WebFetch(domain:www.ruancang.net)",
+      "Bash(git -C \"D:\\\\my-project-world\\\\MineSweeper-program\" status --short)",
+      "Bash(git -C \"D:\\\\my-project-world\\\\MineSweeper-program\" log --oneline -5)",
+      "Bash(git -C \"D:\\\\my-project-world\\\\MineSweeper-program\" log --oneline --follow -- README.md)",
+      "Bash(git -C \"D:\\\\my-project-world\\\\MineSweeper-program\" show 187f1fa --stat)",
+      "Bash(git *)"
     ]
   }
 }
