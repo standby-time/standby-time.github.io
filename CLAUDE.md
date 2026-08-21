@@ -594,6 +594,65 @@ const LEARNING_RESOURCES = {
 
 ---
 
+## 扫雷项目展示（第十七次扩展 — 2026-08-21）
+
+### 概述
+
+将「扫雷」控制台小游戏作为独立项目加入项目展示模块。纯 C 语言实现，不可前端部署，详情页使用标准 Markdown 渲染，末尾附完整源码代码块。
+
+### 仓库组织
+
+- **独立仓库 `MineSweeper-program`**：存放游戏源码与 README
+  - GitHub 地址：`https://github.com/standby-time/MineSweeper-program`
+  - 文件：`MineSweeper.c`（游戏源码）、`MineSweeper.exe`（Windows 可执行程序）、`README.md`
+
+### 项目卡片配置
+
+```js
+// 在 data.js 的 PROJECTS 数组中新增
+{
+  id: "minesweeper",
+  name: "扫雷",
+  category: "game",                       // 新增「游戏开发」分类
+  description: "基于 C 语言实现的控制台扫雷小游戏...",
+  techStack: ["C"],
+  githubUrl: "https://github.com/standby-time/MineSweeper-program",
+  demoUrl: "",                            // 控制台程序，无在线演示
+  deployed: false,
+  featured: false,
+  contentMd: "...",                       // Markdown 详情正文
+}
+```
+
+### 详情页内容
+
+- 项目简介、功能特性（三种难度表）、游戏规则
+- 编译与运行说明（直接运行 exe / gcc 重新编译）
+- 代码结构（函数职责表）、已知问题
+- **完整源码**：详情页末尾以 ```c 代码块展示全部源码
+  - 源码存于 `js/data.js` 的 `MINESWEEPER_SOURCE` 常量（定义在 PROJECTS 之前），contentMd 中通过 `${MINESWEEPER_SOURCE}` 插值引用
+  - 转义约定：C 代码中的 `\n` 在 JS 模板字符串中写作 `\\n`，求值后还原为字面 `\n`
+  - 与独立仓库 `MineSweeper.c` 内容保持一致（仅去除行尾空白）
+
+### 项目分类扩展
+
+新增分类 `game`（游戏开发），需同步更新：
+
+| 文件 | 修改点 |
+|------|--------|
+| `js/data.js` | `PROJECT_CATEGORIES` 新增 `{ id: "game", label: "游戏开发" }` |
+| `js/data.js` | `SIDEBAR_CONFIG.projects.categories` 新增 `proj-game` 分类项 |
+
+现有分类变为：全部项目 / Web 开发 / 移动开发 / 算法 & 数据结构 / 工具 & 配置 / 游戏开发
+
+### 涉及修改的文件
+
+| 文件 | 修改点 |
+|------|--------|
+| `js/data.js` | 新增 `MINESWEEPER_SOURCE` 常量；`PROJECTS` 新增 minesweeper 条目；分类扩展（见上） |
+
+---
+
 ## 首页 — 每日一句卡片（第六次扩展 — 2026-08-05）
 
 ### 功能需求

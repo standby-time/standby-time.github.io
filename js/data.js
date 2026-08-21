@@ -175,6 +175,354 @@ Git 是程序员的必备技能，熟练使用它能大幅提升开发效率和�
   },
 ];
 
+/* ---------- 扫雷项目源码（详情页「完整源码」展示用） ---------- */
+/* 与独立仓库 MineSweeper-program 的 MineSweeper.c 保持一致（仅去除行尾空白） */
+/* C 代码中的 \n 转义为 \\n，模板字符串求值后还原为字面 \n */
+const MINESWEEPER_SOURCE = `\
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <conio.h> /* Windows 专用：getch() 实现"任意键"输入 */
+
+#define MAX_ROWS 24
+#define MAX_COLS 24
+#define MAX_MINES 99
+
+char minefield[MAX_ROWS][MAX_COLS];
+char revealed[MAX_ROWS][MAX_COLS];
+int rows, cols, mines;
+int flags = 0;
+int novisiblesquares;
+
+// Declaring function prototypes
+void initialize();
+void placeMines();
+int isValid(int row, int col);
+int countAdjacentMines(int row, int col);
+int parseInput(const char *input, int *row, int *col);
+int revealCell(int row, int col);
+void flagCell(int row, int col);
+void printBoard();
+int checkWin();
+int askRestart();
+void Menu();
+void updateNovisiblesquares();
+void updateFlags();
+
+int main() {
+    // 外层循环：踩雷后按 R 可从难度选择重新开始
+    while (1) {
+        Menu();
+        int choice;
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                rows = 8;
+                cols = 8;
+                mines = 10;
+                break;
+            case 2:
+                rows = 16;
+                cols = 16;
+                mines = 40;
+                break;
+            case 3:
+                rows = 24;
+                cols = 24;
+                mines = 99;
+                break;
+            default:
+                printf("Invalid choice. Exiting...\\n");
+                return 1;
+        }
+
+        initialize();
+        placeMines();
+
+        // 规则说明：选择难度后展示一次输入格式
+        printf("Input format: enter a move like 'A1' to reveal a cell, or 'FA1' to flag a cell.\\n");
+
+        int restart = 0; // 本局结束后是否重新开始
+
+        // Code in the main loop
+        while (1) {
+            printBoard();
+            char action[8];
+
+            printf("Please enter your move: ");
+            scanf("%7s", action);
+
+            int row, col;
+            if (parseInput(action, &row, &col)) {
+                if (action[0] == 'F' && action[1] >= 'A' && action[1] <= 'Z') {
+                    // plant a flag
+                    flagCell(row, col);
+                } else {
+                    // Coordinates are legal. Uncover the grid.
+                    if (isValid(row, col)) {
+                        if (!revealed[row][col]) {
+                            if (revealCell(row, col)) {
+                                // Game over, mines uncovered
+                                printBoard();
+                                printf("Game Over! You hit a mine!\\n");
+                                restart = askRestart();
+                                break;
+                            }
+                            // Not all of Ray's grids were uncovered. Win.
+                            if (checkWin()) {
+                                printBoard();
+                                printf("Congratulations! You won!\\n");
+                                restart = askRestart();
+                                break;
+                            }
+                        } else {
+                            printf("Cell already revealed. Try again.\\n");
+                        }
+                    } else {
+                        printf("Invalid cell. Try again.\\n");
+                    }
+                }
+            } else {
+                printf("Invalid input. Please enter a valid move (e.g., 'A1' or 'FA1').\\n");
+            }
+        }
+
+        if (!restart) {
+            break;
+        }
+    }
+    return 0;
+}
+
+
+// Menu Difficulty Selection
+void Menu(){
+    printf("Welcome to Minesweeper.\\n");
+    printf("Please choose your difficulty:\\n");
+    printf("1: Beginner 8 x 8 grid with 10 mines\\n");
+    printf("2: Intermediate 16 x 16 grid with 40 mines\\n");
+    printf("3: Expert 24 x 24 grid with 99 mines\\n");
+}
+
+
+// Initialize the game panel
+void initialize() {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            minefield[i][j] = ' ';
+            revealed[i][j] = 0;
+        }
+    }
+    // 重新开始一局时也要重置的全局状态
+    flags = 0;
+    novisiblesquares = rows * cols;
+}
+
+
+// stochastic minelaying
+void placeMines() {
+    srand(time(NULL));
+    int count = 0;
+    while (count < mines) {
+        int row = rand() % rows;
+        int col = rand() % cols;
+        if (minefield[row][col] != 'X') {
+            minefield[row][col] = 'X';
+            count++;
+        }
+    }
+}
+
+
+// Check if the coordinates are valid
+int isValid(int row, int col) {
+    return (row >= 0 && row < rows && col >= 0 && col < cols);
+}
+
+
+// Calculate the number of mines around the grid
+int countAdjacentMines(int row, int col) {
+    int count = 0;
+    int dr[] = {-1, -1, -1, 0, 0, 1, 1, 1}; // Row Offset
+    int dc[] = {-1, 0, 1, -1, 1, -1, 0, 1}; // Column Offset
+
+    for (int i = 0; i < 8; i++) {
+        int newRow = row + dr[i];
+        int newCol = col + dc[i];
+        if (isValid(newRow, newCol) && minefield[newRow][newCol] == 'X') {
+            count++;
+        }
+    }
+    return count;
+}
+
+
+// Parsing of user-entered strings
+int parseInput(const char *input, int *row, int *col) {
+    if (strlen(input) < 2) {
+        return 0;
+    }
+
+    // The first character is "F", the second character is a letter. Flag operation.
+    if (input[0] == 'F' && input[1] >= 'A' && input[1] <= 'Z') {
+        *row = input[1] - 'A';
+        if (strlen(input) == 3 && input[2] >= '1' && input[2] <= '9') {
+            *col = input[2] - '1';
+            return 1;
+        }
+        if (strlen(input) == 4 && input[2] >= '1' && input[2] <= '9'
+                && input[3] >= '0' && input[3] <= '9') {
+            *col = (input[2] - '0') * 10 + (input[3] - '0') - 1;
+            return 1;
+        }
+        return 0;
+    }
+
+    // Uncovering the operation of the lattice
+    if (input[0] >= 'A' && input[0] <= 'Z' && input[1] >= '1' && input[1] <= '9') {
+        *row = input[0] - 'A';
+        if (strlen(input) == 2) {
+            *col = input[1] - '1';
+            return 1;
+        }
+        if (strlen(input) == 3 && input[2] >= '0' && input[2] <= '9') {
+            *col = (input[1] - '0') * 10 + (input[2] - '0') - 1;
+            return 1;
+        }
+        return 0;
+    }
+
+    return 0;
+}
+
+
+
+// Uncover the designated grid
+int revealCell(int row, int col) {
+    if (!isValid(row, col) || revealed[row][col]) {
+        return 0;
+    }
+
+    revealed[row][col] = 1;
+
+    if (minefield[row][col] == 'X') {
+        return 1;
+    }
+
+    int count = countAdjacentMines(row, col);
+    if (count > 0) {
+        minefield[row][col] = count + '0';
+    } else {
+        minefield[row][col] = '0';
+
+        int dr[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int dc[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+        for (int i = 0; i < 8; i++) {
+            if (revealCell(row + dr[i], col + dc[i])) {
+                return 1;
+            }
+        }
+    }
+
+    updateNovisiblesquares(); // Update No visible squares
+    return 0;
+}
+
+// Function to flag a cell
+void flagCell(int row, int col) {
+    if (isValid(row, col)) {
+        minefield[row][col] = 'F';
+        revealed[row][col] = 1; // Mark the grid as uncovered
+        updateFlags(); // Updating the number of flags
+    }
+}
+
+
+void updateNovisiblesquares() {
+    int visibleSquares = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (revealed[i][j]) {
+                visibleSquares++;
+            }
+        }
+    }
+    novisiblesquares = rows * cols - visibleSquares;
+}
+
+void updateFlags() {
+    int flagCount = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (minefield[i][j] == 'F') {
+                flagCount++;
+            }
+        }
+    }
+    flags = flagCount;
+}
+
+
+void printBoard() {
+    printf("Mines: %d   Flags: %d   No visible squares: %d\\n", mines, flags, novisiblesquares);
+
+    printf("   ");
+    for (int i = 0; i < cols; i++) {
+        printf(" %2d ", i + 1);
+    }
+    printf("\\n");
+
+    printf("  +");
+    for (int j = 0; j < cols; j++) {
+        printf("---+");
+    }
+    printf("\\n");
+
+    for (int i = 0; i < rows; i++) {
+        printf("%c |", 'A' + i);
+        for (int j = 0; j < cols; j++) {
+            if (revealed[i][j]) {
+                printf(" %2c|", minefield[i][j]);
+            }
+            else {
+                printf("   |");
+            }
+        }
+        printf("\\n");
+
+        printf("  +");
+        for (int j = 0; j < cols; j++) {
+            printf("---+");
+        }
+        printf("\\n");
+    }
+}
+
+
+int checkWin() {
+    int novisiblecount = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (!revealed[i][j] && minefield[i][j] != 'X') {
+                novisiblecount++;
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+
+// 踩雷后处理：按 R 从难度选择重新开始，按其他任意键退出
+int askRestart() {
+    printf("Press 'R' to restart from difficulty selection, or press any other key to exit.\\n");
+    int c = getch();
+    printf("\\n");
+    return (c == 'R' || c == 'r');
+}`;
+
 /* ---------- 项目展示数据 ---------- */
 const PROJECTS = [
   {
@@ -526,6 +874,91 @@ npx react-native run-android     # 连接 Android 设备或模拟器
 后续可扩展方向：引入更多认知范式（Stroop、数字广度等）、增加数据可视化仪表盘、支持多用户组管理。
 `,
   },
+  {
+    id: "minesweeper",
+    name: "扫雷",
+    category: "game",
+    description: "基于 C 语言实现的控制台扫雷小游戏，支持三种难度、坐标翻开、插旗标记与空白格递归展开。",
+    techStack: ["C"],
+    githubUrl: "https://github.com/standby-time/MineSweeper-program",
+    demoUrl: "",
+    deployed: false,
+    featured: false,
+    contentMd: `\
+## 项目简介
+
+基于 C 语言实现的控制台扫雷小游戏，支持三种难度、坐标翻开与插旗标记，翻开全部非雷格即可获胜。
+
+## 功能特性
+
+- 三种难度可选：
+
+| 难度 | 棋盘大小 | 雷数 |
+| --- | --- | --- |
+| 1 初级（Beginner） | 8 × 8 | 10 |
+| 2 中级（Intermediate） | 16 × 16 | 40 |
+| 3 高级（Expert） | 24 × 24 | 99 |
+
+- 坐标翻开与插旗：输入 \`A1\` 翻开格子，输入 \`FA1\` 给格子插旗
+- 空白格递归展开：翻开无相邻雷的格子时自动展开周围区域
+- 游戏结束后可选择：按 \`R\` 从难度选择重新开始，按其他任意键退出
+- 每次选择难度后显示输入格式说明
+
+## 游戏规则
+
+1. 启动程序后，输入 \`1\`、\`2\` 或 \`3\` 选择难度
+2. 每回合输入一个移动指令：
+   - \`A1\`：翻开 A 行 1 列的格子（字母为行号，数字为列号）
+   - \`FA1\`：给该格子插旗标记
+3. 翻开雷格 → 游戏结束；翻开所有非雷格 → 获胜
+4. 游戏结束后（踩雷或获胜）：按 \`R\` 重新开始（回到难度选择），按其他任意键退出程序
+
+## 编译与运行
+
+直接运行：
+
+\`\`\`bash
+MineSweeper.exe
+\`\`\`
+
+重新编译（Windows，需 MinGW 或 MSVC）：
+
+\`\`\`bash
+gcc MineSweeper.c -o MineSweeper.exe
+\`\`\`
+
+> 说明：代码使用 \`<conio.h>\` 中的 \`getch()\` 实现"任意键退出"，该头文件为 Windows 专用；如需移植到 Linux/macOS，需替换此部分实现。
+
+## 代码结构
+
+| 函数 | 作用 |
+| --- | --- |
+| \`main\` | 难度选择、游戏主循环、胜负与重新开始处理 |
+| \`Menu\` | 打印难度选择菜单 |
+| \`initialize\` | 初始化棋盘并重置全局状态 |
+| \`placeMines\` | 随机布雷 |
+| \`parseInput\` | 解析玩家输入的移动指令 |
+| \`revealCell\` | 翻开格子，空白格递归展开 |
+| \`flagCell\` | 插旗标记 |
+| \`countAdjacentMines\` | 统计周围 8 格的雷数 |
+| \`isValid\` | 判断坐标是否合法 |
+| \`printBoard\` | 打印棋盘与状态栏 |
+| \`checkWin\` | 判断是否获胜 |
+| \`askRestart\` | 游戏结束后询问退出或重新开始 |
+| \`updateNovisiblesquares\` / \`updateFlags\` | 更新剩余格子数与旗数统计 |
+
+## 已知问题
+
+- 首次翻开没有安全保护，第一下就可能踩雷
+- 已翻开的格子仍可被插旗覆盖，数字显示会被 \`F\` 替换
+
+## 完整源码
+
+\`\`\`c
+${MINESWEEPER_SOURCE}
+\`\`\`
+`,
+  },
 ];
 
 /* ---------- 项目分类定义（对应侧边栏目录结构） ---------- */
@@ -535,6 +968,7 @@ const PROJECT_CATEGORIES = [
   { id: "app",  label: "移动开发" },
   { id: "algo", label: "算法 & 数据结构" },
   { id: "tools",label: "工具 & 配置" },
+  { id: "game", label: "游戏开发" },
 ];
 
 /* ---------- 联系方式数据 ---------- */
@@ -702,6 +1136,15 @@ const SIDEBAR_CONFIG = {
         id: "proj-tools",
         label: "工具 & 配置",
         subItems: PROJECTS.filter(p => p.category === "tools").map(p => ({
+          id: `proj-${p.id}`,
+          label: p.name,
+          anchor: `project-${p.id}`,
+        })),
+      },
+      {
+        id: "proj-game",
+        label: "游戏开发",
+        subItems: PROJECTS.filter(p => p.category === "game").map(p => ({
           id: `proj-${p.id}`,
           label: p.name,
           anchor: `project-${p.id}`,
