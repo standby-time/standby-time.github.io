@@ -928,6 +928,11 @@ const ContentRenderer = {
       if (codeEl) {
         const classMatch = codeEl.className.match(/language-(\w+)/);
         lang = classMatch ? classMatch[1] : "";
+
+        /* C 语言代码块做语法高亮（复用 C 刷题页的高亮逻辑） */
+        if (lang === "c") {
+          codeEl.innerHTML = CPracticeRenderer._highlightC(codeEl.textContent);
+        }
       }
 
       /* 创建包装容器 */

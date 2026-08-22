@@ -103,16 +103,16 @@ const CPracticeRenderer = {
 
   _highlightC(code) {
     let html = this._esc(code);
+    const tokens = [];
 
-    /* 块注释 */
-    html = html.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="c-hl-comment">$1</span>');
-
-    /* 行注释 */
-    html = html.replace(/(\/\/.*)/g, '<span class="c-hl-comment">$1</span>');
-
-    /* 字符串 */
-    html = html.replace(/"([^"\\]|\\.)*"/g, '<span class="c-hl-string">$&</span>');
-    html = html.replace(/'([^'\\]|\\.)'/g, '<span class="c-hl-string">$&</span>');
+    /* 先把注释和字符串摘出占位（单遍匹配，注释里的引号、字符串里的 // 都不会互相误伤） */
+    html = html.replace(/(\/\*[\s\S]*?\*\/|\/\/.*|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)')/g, (match) => {
+      tokens.push({
+        text: match,
+        isComment: match.startsWith("/*") || match.startsWith("//"),
+      });
+      return `@@HL${tokens.length - 1}@@`;
+    });
 
     /* 关键字 */
     const keywords = [
@@ -128,6 +128,13 @@ const CPracticeRenderer = {
 
     /* 数字 */
     html = html.replace(/\b(\d+\.?\d*([eE][+-]?\d+)?)\b/g, '<span class="c-hl-number">$1</span>');
+
+    /* 还原注释和字符串 */
+    html = html.replace(/@@HL(\d+)@@/g, (match, i) => {
+      const t = tokens[i];
+      const cls = t.isComment ? "c-hl-comment" : "c-hl-string";
+      return `<span class="${cls}">${t.text}</span>`;
+    });
 
     return html;
   },
