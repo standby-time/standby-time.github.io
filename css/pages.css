@@ -1020,17 +1020,28 @@ details[open] .c-practice__approach-summary::before {
   color: inherit;
 }
 
-/* ---- C 语法高亮颜色 ---- */
-.c-hl-keyword  { color: #569cd6; }  /* 关键字（蓝） */
-.c-hl-comment  { color: #6a9955; }  /* 注释（绿） */
-.c-hl-string   { color: #ce9178; }  /* 字符串（橙） */
-.c-hl-number   { color: #b5cea8; }  /* 数字（浅绿） */
+/* ---- C 语法高亮颜色（复刻 VS Code highlightwords 扩展配色，作字体色） ----
+ * 深色主题直接使用配置中的颜色名；
+ * 浅色主题配置值为淡色（背景色系），直接做字体色对比度仅 ~1.5:1，
+ * 按同色相加深至 WCAG AA（≥4.5:1） */
+.c-hl-keyword      { color: cyan; }           /* 关键字（青） */
+.c-hl-comment      { color: lightgreen; }     /* 注释（浅绿） */
+.c-hl-string       { color: orange; }         /* 字符串（橙） */
+.c-hl-char         { color: red; }            /* 字符（红） */
+.c-hl-number       { color: magenta; }        /* 数字（品红） */
+.c-hl-function     { color: pink; }           /* 函数（粉） */
+.c-hl-type         { color: cornflowerblue; } /* 类型（矢车菊蓝） */
+.c-hl-preprocessor { color: green; }          /* 预处理（绿） */
 
-/* 浅色主题下的高亮颜色调整 */
-[data-theme="light"] .c-hl-keyword  { color: var(--color-code-keyword); }
-[data-theme="light"] .c-hl-comment  { color: var(--color-code-comment); }
-[data-theme="light"] .c-hl-string   { color: var(--color-code-string); }
-[data-theme="light"] .c-hl-number   { color: var(--color-code-number); }
+/* 浅色主题：配置浅色值的同色相加深版（对比度均 ≥4.5:1） */
+[data-theme="light"] .c-hl-keyword      { color: #1a6bb8; }  /* 由 #b3d9ff 加深 */
+[data-theme="light"] .c-hl-comment      { color: #4b4bc4; }  /* 由 #b3b3ff 加深 */
+[data-theme="light"] .c-hl-string       { color: #1a7a1a; }  /* 由 #b3ffb3 加深 */
+[data-theme="light"] .c-hl-char         { color: #4a6a6a; }  /* 由 #d1e0e0 加深 */
+[data-theme="light"] .c-hl-number       { color: #a05a1a; }  /* 由 #ffd9b3 加深 */
+[data-theme="light"] .c-hl-function     { color: #4f7a1a; }  /* 由 #e6ffb3 加深 */
+[data-theme="light"] .c-hl-type         { color: #a3266e; }  /* 由 #ffb3ff 加深 */
+[data-theme="light"] .c-hl-preprocessor { color: #7a6a00; }  /* 由 #ffff80 加深 */
 
 [data-theme="light"] .c-practice__code {
   background-color: var(--color-code-bg);

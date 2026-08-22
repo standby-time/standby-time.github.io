@@ -3,7 +3,8 @@
  *
  * 渲染布局：左侧题目目录（独立滚动） + 右侧连续题目内容（独立滚动）
  * 功能：目录高亮跟随滚动（Intersection Observer）、点击目录项滑动、
- *       同一题多种解法分组展示、C 代码基础语法高亮、代码复制
+ *       同一题多种解法分组展示、C 代码 8 类语法高亮（关键字/类型/预处理/
+ *       函数/字符串/字符/数字/注释）、代码复制
  *
  * 入口：CPracticeRenderer.render(container, project)
  * ============================================================ */
@@ -105,35 +106,46 @@ const CPracticeRenderer = {
     let html = this._esc(code);
     const tokens = [];
 
-    /* 先把注释和字符串摘出占位（单遍匹配，注释里的引号、字符串里的 // 都不会互相误伤） */
-    html = html.replace(/(\/\*[\s\S]*?\*\/|\/\/.*|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)')/g, (match) => {
-      tokens.push({
-        text: match,
-        isComment: match.startsWith("/*") || match.startsWith("//"),
-      });
+    /* 先把注释、字符串、字符、预处理指令摘出占位（单遍匹配，互不误伤） */
+    html = html.replace(/(\/\*[\s\S]*?\*\/|\/\/.*|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)'|#[ \t]*(?:include|define|undef|ifdef|ifndef|if|elif|else|endif|pragma|error|warning)\b)/g, (match) => {
+      let type;
+      if (match.startsWith("/*") || match.startsWith("//")) type = "comment";
+      else if (match.startsWith('"')) type = "string";
+      else if (match.startsWith("'")) type = "char";
+      else type = "preprocessor";
+      tokens.push({ text: match, type });
       return `@@HL${tokens.length - 1}@@`;
     });
 
+    /* 类型关键字（先于普通关键字，避免重复匹配） */
+    const types = ["char","double","float","int","long","short","signed","unsigned","void"];
+    html = html.replace(new RegExp(`\\b(${types.join("|")})\\b`, "g"), '<span class="c-hl-type">$1</span>');
+
     /* 关键字 */
     const keywords = [
-      "auto","break","case","char","const","continue","default","do",
-      "double","else","enum","extern","float","for","goto","if",
-      "int","long","register","return","short","signed","sizeof","static",
-      "struct","switch","typedef","union","unsigned","void","volatile","while",
-      "include","define","ifdef","ifndef","endif","pragma",
-      "NULL","printf","scanf","malloc","free","sizeof"
+      "auto","break","case","const","continue","default","do",
+      "else","enum","extern","for","goto","if","register","return",
+      "sizeof","static","struct","switch","typedef","union","volatile","while",
+      "NULL"
     ];
-    const kwPattern = new RegExp(`\\b(${keywords.join("|")})\\b`, "g");
-    html = html.replace(kwPattern, '<span class="c-hl-keyword">$1</span>');
+    html = html.replace(new RegExp(`\\b(${keywords.join("|")})\\b`, "g"), '<span class="c-hl-keyword">$1</span>');
+
+    /* 函数调用：标识符后跟 (（前瞻不消耗字符，保留空格） */
+    html = html.replace(/\b([a-zA-Z_]\w*)(?=\s*\()/g, '<span class="c-hl-function">$1</span>');
 
     /* 数字 */
     html = html.replace(/\b(\d+\.?\d*([eE][+-]?\d+)?)\b/g, '<span class="c-hl-number">$1</span>');
 
-    /* 还原注释和字符串 */
+    /* 还原注释、字符串、字符、预处理指令 */
+    const classMap = {
+      comment: "c-hl-comment",
+      string: "c-hl-string",
+      char: "c-hl-char",
+      preprocessor: "c-hl-preprocessor",
+    };
     html = html.replace(/@@HL(\d+)@@/g, (match, i) => {
       const t = tokens[i];
-      const cls = t.isComment ? "c-hl-comment" : "c-hl-string";
-      return `<span class="${cls}">${t.text}</span>`;
+      return `<span class="${classMap[t.type]}">${t.text}</span>`;
     });
 
     return html;

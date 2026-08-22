@@ -653,6 +653,54 @@ const LEARNING_RESOURCES = {
 
 ---
 
+## C 代码高亮扩展（第十八次扩展 — 2026-08-23）
+
+### 概述
+
+1. **Markdown 代码块接入高亮**：项目/博客详情页中 `marked.js` 渲染的 ```c 代码块此前只有语言标签和复制按钮，无语法高亮。现在 `_enhanceCodeBlocks` 对 `language-c` 代码块调用 `CPracticeRenderer._highlightC`（扫雷详情页完整源码由此获得高亮）。
+2. **token 分类 4 类 → 8 类**：新增类型、预处理、函数、字符四类。
+3. **配色采用 VS Code highlightwords 扩展配置（字体色）**：深色主题用配置中的颜色名原值，浅色主题用配置浅色值的同色相加深版。
+4. **修复旧高亮 bug**：原 `_highlightC` 中注释先包成 `<span class="c-hl-comment">`，随后的字符串正则会把 `class="c-hl-comment"` 属性误判为字符串，产生嵌套损坏的 HTML（C 刷题页带注释的代码同样受影响）。
+
+### Token 分类与配色映射
+
+| Token | CSS 类 | 深色（字体色） | 浅色（字体色·加深） |
+|-------|--------|------------|------------------|
+| 关键字 | `.c-hl-keyword` | cyan | #1a6bb8 |
+| 注释 | `.c-hl-comment` | lightgreen | #4b4bc4 |
+| 字符串 | `.c-hl-string` | orange | #1a7a1a |
+| 字符 | `.c-hl-char` | red | #4a6a6a |
+| 数字 | `.c-hl-number` | magenta | #a05a1a |
+| 函数 | `.c-hl-function` | pink | #4f7a1a |
+| 类型 | `.c-hl-type` | cornflowerblue | #a3266e |
+| 预处理 | `.c-hl-preprocessor` | green | #7a6a00 |
+
+### 高亮实现（占位符方案）
+
+`_highlightC` 流程：转义 → 单遍摘出注释/字符串/字符/预处理指令（`@@HLn@@` 占位，注释里的引号、字符串里的 `//` 互不误伤）→ 类型关键字 → 普通关键字 → 函数调用（标识符 + 前瞻 `(`，不消耗空格）→ 数字 → 还原占位。
+
+- **类型**：`char/double/float/int/long/short/signed/unsigned/void`（先于普通关键字匹配）
+- **关键字**：控制流与存储类等；`printf/scanf/malloc/free` 移出关键字列表，由函数规则捕获；`NULL` 保留
+- **预处理**：`#include/#define/#undef/#ifdef/#ifndef/#if/#elif/#else/#endif/#pragma/#error/#warning`
+- **函数**：任意标识符后跟 `(`；`if (`、`sizeof (` 等已被关键字/类型包裹，不会被误判
+
+### 样式形式
+
+- 全部为 `color` 字体色，无背景/描边
+- 深色主题：直接使用配置颜色名，对比度 11~13:1（cyan/lightgreen/orange/pink 等）；`green`（3.25:1）与 `red`（4.17:1）为配置原值中偏弱项
+- 浅色主题：配置浅色值（#b3d9ff 等）为淡色背景色系，直接做字体色对比度仅 ~1.5:1，故按同色相加深至 WCAG AA（≥4.5:1）
+- `.c-hl-*` 类全局生效：C 刷题页、项目/博客详情页的 ```c 代码块共用
+
+### 涉及修改的文件
+
+| 文件 | 修改点 |
+|------|--------|
+| `js/render-content.js` | `_enhanceCodeBlocks` 对 `language-c` 代码块调用 `CPracticeRenderer._highlightC` |
+| `js/render-c-practice.js` | `_highlightC` 重写为 8 类占位符方案；修复注释 span 被字符串正则误伤的 bug |
+| `css/pages.css` | `.c-hl-*` 8 类样式重写（深色描边 + 浅色背景） |
+
+---
+
 ## 首页 — 每日一句卡片（第六次扩展 — 2026-08-05）
 
 ### 功能需求
